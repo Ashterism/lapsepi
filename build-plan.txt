@@ -1,0 +1,151 @@
+
+LAPSEPI – BUILD PLAN
+
+END GOAL: v1
+A simple travel timelapse device that:
+- lets me prove the core flow with mocks first
+- lets me take a photo and see it in a basic web view
+- lets me frame the shot before starting a run
+- stores images cleanly by session
+- turns them into a video
+- lets me get that video onto my phone
+- (later) has power management baked in 
+
+--------------------------------------------------
+## v0.0 – SETUP + REUSE
+[x] review motionpi and monipi files and patterns worth reusing
+[x] copy useful starter files into `archive/`
+[x] create target folder structure under `src/lapsepi/`
+[x] set up `.gitignore`
+[x] set up `requirements.txt`
+[x] commit starter structure
+[x] set up github repo etc
+
+--------------------------------------------------
+## v0.1 – MOCK CAMERA FLOW
+[x] review existing mock capture code and choose what to reuse
+[x] save a single mock photo to local data folder
+[x] save repeated mock photos on a fixed interval
+[x] confirm filenames / ordering make sense
+[x] commit working mock capture flow
+[x] tag release `v0.1`
+
+--------------------------------------------------
+## v0.2 – BASIC WEB VIEW
+[ ] create a simple web app shell
+[ ] add route for home page
+[ ] add route to trigger test photo
+[ ] show latest saved image in browser
+[ ] confirm photo can be taken and viewed from web UI
+[ ] commit working basic web view
+[ ] tag release `v0.2`
+
+--------------------------------------------------
+## v0.3 – REAL CAMERA PARITY
+[ ] swap mock capture for real camera capture
+[ ] confirm same basic flow works on Pi
+[ ] save real test photo to correct folder
+[ ] confirm latest image appears in web UI
+[ ] commit working real camera test-shot flow
+[ ] tag release `v0.3`
+
+--------------------------------------------------
+## v0.4 – SESSION LOGIC
+[ ] create new session folder per run
+[ ] store images inside session folder
+[ ] define session naming
+[ ] track whether a session is running
+[ ] stop session cleanly
+[ ] commit working session logic
+[ ] tag release `v0.4`
+
+--------------------------------------------------
+## v0.5 – TIMELAPSE CAPTURE
+[ ] start repeated capture as a session
+[ ] support fixed interval options
+[ ] support fixed runtime options
+[ ] calculate expected frame count
+[ ] save captured images into active session
+[ ] commit working timelapse capture flow
+[ ] tag release `v0.5`
+
+--------------------------------------------------
+## v0.6 – VIDEO OUTPUT
+[ ] integrate ffmpeg
+[ ] generate MP4 from session images
+[ ] use fixed FPS (e.g. 30)
+[ ] save video in session folder
+[ ] keep source images
+[ ] commit working video output
+[ ] tag release `v0.6`
+
+--------------------------------------------------
+## v0.7 – WEB TIMELAPSE CONTROLS
+[ ] add interval dropdown (5s / 10s / 30s)
+[ ] add runtime dropdown (10m / 30m / 3h / 8h)
+[ ] show estimated frames
+[ ] show estimated video length
+[ ] add start / stop timelapse controls
+[ ] commit working timelapse web controls
+[ ] tag release `v0.7`
+
+--------------------------------------------------
+## v0.8 – DOWNLOAD OUTPUT
+[ ] download MP4 via browser
+[ ] list sessions (basic)
+[ ] optionally download images
+[ ] commit working download flow
+[ ] tag release `v0.8`
+
+--------------------------------------------------
+## v1 – READY
+[ ] use it for a real timelapse (travel / window / outdoors)
+[ ] produce a usable video
+[ ] retrieve video via phone successfully
+[ ] commit v1.0
+[ ] tag release `v1.0`
+
+--------------------------------------------------
+## LATER / NOT V1
+[ ] add physical button / status light
+[ ] add wifi on / off control
+[ ] improve status / error handling
+[ ] tidy archive once core structure is settled
+
+--------------------------------------------------
+## TARGET FILE TREE
+lapsepi/
+├── archive/
+├── data/
+│   ├── sessions/
+│   ├── temp/
+│   └── mock/
+├── src/
+│   └── lapsepi/
+│       ├── __init__.py
+│       ├── config.py
+│       ├── capture/
+│       │   ├── camera.py
+│       │   └── timelapse.py
+│       ├── process/
+│       │   ├── session.py
+│       │   ├── storage.py
+│       │   ├── timing.py
+│       │   └── video.py
+│       ├── web/
+│       │   ├── app.py
+│       │   ├── templates/
+│       │   │   └── index.html
+│       │   └── static/
+│       │       └── main.css
+│       ├── mocks/
+│       │   └── mock_camera.py
+│       └── utils/
+│           └── logging_config.py
+├── tests/
+│   ├── fixtures/
+│   └── test_camera.py
+├── .gitignore
+├── README.md
+├── requirements.txt
+└── LICENSE
