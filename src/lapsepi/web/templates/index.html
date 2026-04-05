@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>lapsepi</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+    <main class="page">
+        <header class="card">
+            <div class="card-body card-body-tight">
+                <h1 class="page-title">lapsepi</h1>
+                <p class="page-subtitle">Timelapse camera control</p>
+            </div>
+        </header>
+
+        <section class="card">
+            <div class="card-body">
+                <h2 class="section-title">Status</h2>
+                <p class="status-line">Status: READY</p>
+                <p class="status-line">Power: connected</p>
+                <p class="status-line">Storage: 12.4GB free</p>
+            </div>
+        </section>
+
+        <section>
+            <button class="button" type="button">Take test photo</button>
+        </section>
+
+        <section class="card image-card">
+            <div class="card-body card-body-tight">
+                <h2 class="section-title">Last image</h2>
+                <p class="image-label">Taken: 26/04/05 20:00:25</p>
+            </div>
+            <div class="preview-frame">
+                <div class="preview-placeholder"></div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-body settings-card-body">
+                <h2 class="section-title">Timelapse settings</h2>
+
+                <div class="controls-stack">
+                    <select class="select-control" aria-label="Interval">
+                        <option selected>Interval ↓</option>
+                        <option>5 seconds</option>
+                        <option>10 seconds</option>
+                        <option>30 seconds</option>
+                    </select>
+
+                    <select class="select-control" aria-label="Run time">
+                        <option selected>Run time ↓</option>
+                        <option>10 minutes</option>
+                        <option>30 minutes</option>
+                        <option>3 hours</option>
+                        <option>8 hours</option>
+                    </select>
+                </div>
+
+                <p class="estimate-text">Estimated frames / length (30fps):</p>
+                <p class="estimate-text">~180 frames / ~6s video</p>
+            </div>
+        </section>
+
+        <section>
+            <button class="button" type="button">Start timelapse &rsaquo;</button>
+        </section>
+    </main>
+</body>
+</html>

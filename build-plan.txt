@@ -32,8 +32,8 @@ A simple travel timelapse device that:
 
 --------------------------------------------------
 ## v0.2 – BASIC WEB VIEW
-[ ] create a simple web app shell
-[ ] add route for home page
+[x] create a simple web app shell
+[x] add route for home page
 [ ] add route to trigger test photo
 [ ] show latest saved image in browser
 [ ] confirm photo can be taken and viewed from web UI

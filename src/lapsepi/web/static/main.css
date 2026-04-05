@@ -1,0 +1,159 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #efefef;
+    color: #111111;
+}
+
+.page {
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.styleguide-page {
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.styleguide-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.page-title,
+.page-subtitle,
+.styleguide-heading,
+.section-title,
+.status-line,
+.image-label,
+.estimate-text {
+    margin: 0;
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: #444444;
+}
+
+.styleguide-heading {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #444444;
+}
+
+.card {
+    width: 100%;
+    background: #d9d9d9;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-body-tight {
+    gap: 6px;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.status-line,
+.image-label,
+.estimate-text {
+    font-size: 0.95rem;
+    line-height: 1.35;
+}
+
+.button {
+    width: 100%;
+    min-height: 60px;
+    padding: 16px;
+    border: 0;
+    border-radius: 10px;
+    background: #d9d9d9;
+    color: #111111;
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.button:hover {
+    filter: brightness(0.98);
+}
+
+.button:focus-visible,
+.select-control:focus-visible {
+    outline: 2px solid #222222;
+    outline-offset: 2px;
+}
+
+.card-header {
+    padding: 16px 16px 0 16px;
+}
+
+.preview-frame {
+    width: 100%;
+    padding-bottom: 16px
+}
+
+.preview-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #6f7081;
+}
+
+.settings-card-body {
+    gap: 16px;
+}
+
+.controls-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.select-control {
+    width: 100%;
+    min-height: 58px;
+    padding: 0 20px;
+    border: 1px solid #444444;
+    border-radius: 0;
+    background: #d9d9d9;
+    color: #111111;
+    font: inherit;
+    font-size: 1rem;
+}
+
+@media (min-width: 640px) {
+    .page {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
