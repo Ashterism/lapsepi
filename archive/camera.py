@@ -1,6 +1,5 @@
 import time
-from ..process.storage import Storage
-from ..mocks.mock_file_maker import create_mock_jpg
+from .storage import Storage
 
 storage = Storage()
 
@@ -8,49 +7,37 @@ storage = Storage()
 """ later on... move cam start from init to take image to save battery """
 
 
-# handles image/video capture; delegates file paths to Storage; switches between real and mock based on mode
 class Camera:
 
     def __init__(self, mode="dev"):
         self.mode = mode
-        self.cam = None
-        self.initialised = False
-
-    def _init_camera(self):
-        if self.mode == "prod" and not self.initialised:
+        if self.mode == "prod":
+            # setup for REAL camera
             from picamera2 import Picamera2
             self.cam = Picamera2()
 
+            # Configure once for still capture and start camera
             still_config = self.cam.create_still_configuration()
             self.cam.configure(still_config)
             self.cam.start()
 
-            self.initialised = True
+        else:
+            # set up mock
+            ...
 
-    # capture a single image; uses real camera in prod, mock file in dev
+
     def take_image(self):
         if self.mode == "prod":
-            if not self.initialised:
-                self._init_camera()
             filepath = storage.build_media_path("image")
             self.cam.capture_file(filepath)
 
         elif self.mode == "dev":
             time.sleep(0.1)
-            filepath = storage.build_media_path("image")
-            create_mock_jpg(filepath)
-
-        storage.update_last_image_taken(filepath)        
+            storage.create_mock_file("image")
 
 
-
-    ## not needed for lapsepi but left in for file completeness (for reuse in other projects later)
-
-    # record a short video clip; uses real camera in prod, mock file in dev
     def take_video(self, duration=10):
         if self.mode == "prod":
-            if not self.initialised:
-                self._init_camera()
             from picamera2.encoders import H264Encoder
             from picamera2.outputs import FfmpegOutput
 
@@ -69,7 +56,5 @@ class Camera:
             self.cam.stop_recording()
             self.cam.stop()
 
-        elif self.mode == "dev":   
-            filepath = storage.build_media_path("video")
-            with open(filepath, "wb"):
-                pass
+        elif self.mode == "dev":
+            storage.create_mock_file("video")

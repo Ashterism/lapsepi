@@ -35,10 +35,10 @@ A simple travel timelapse device that:
 [x] create a simple web app shell
 [x] add route for home page
 [x] add route to trigger test photo
-[ ] show latest saved image in browser
-[ ] confirm photo can be taken and viewed from web UI
-[ ] commit working basic web view
-[ ] tag release `v0.2`
+[x] show latest saved image in browser
+[x] confirm photo can be taken and viewed from web UI
+[x] commit working basic web view
+[x] tag release `v0.2`
 
 --------------------------------------------------
 ## v0.3 – REAL CAMERA PARITY

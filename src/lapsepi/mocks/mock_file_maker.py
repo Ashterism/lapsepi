@@ -7,7 +7,7 @@ def create_mock_jpg(path):
 
     # draw blue square bottom-left
     draw = ImageDraw.Draw(img)
-    draw.rectangle([0, 480-5, 5, 480], fill="blue")
+    draw.rectangle([0, 480-50, 50, 480], fill="blue")
 
     img.save(path)
 
