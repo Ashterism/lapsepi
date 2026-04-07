@@ -1,4 +1,3 @@
-
 import time
 
 from .utils.environment_detector import detect_runmode
@@ -26,4 +25,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

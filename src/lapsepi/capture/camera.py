@@ -13,22 +13,25 @@ class Camera:
 
     def __init__(self, mode="dev"):
         self.mode = mode
-        if self.mode == "prod":
-            # setup for REAL camera
+        self.cam = None
+        self.initialised = False
+
+    def _init_camera(self):
+        if self.mode == "prod" and not self.initialised:
             from picamera2 import Picamera2
             self.cam = Picamera2()
 
-            # Configure once for still capture and start camera
             still_config = self.cam.create_still_configuration()
             self.cam.configure(still_config)
             self.cam.start()
 
-        # dev mode > nothing to set up
-        
+            self.initialised = True
 
     # capture a single image; uses real camera in prod, mock file in dev
     def take_image(self):
         if self.mode == "prod":
+            if not self.initialised:
+                self._init_camera()
             filepath = storage.build_media_path("image")
             self.cam.capture_file(filepath)
 
@@ -37,10 +40,23 @@ class Camera:
             filepath = storage.build_media_path("image")
             create_mock_jpg(filepath)
 
+    def set_last_image():
+        ...
+        # take filepath and pass into json
+        # code to open, write to json can be here or storage
+        # path to json will be in storage though
+
+
+
+
+
+    ## not needed for lapsepi but left in for file completeness (for reuse in other projects later)
 
     # record a short video clip; uses real camera in prod, mock file in dev
     def take_video(self, duration=10):
         if self.mode == "prod":
+            if not self.initialised:
+                self._init_camera()
             from picamera2.encoders import H264Encoder
             from picamera2.outputs import FfmpegOutput
 
