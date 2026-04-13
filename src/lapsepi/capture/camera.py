@@ -27,21 +27,21 @@ class Camera:
 
             self.initialised = True
 
+
     # capture a single image; uses real camera in prod, mock file in dev
-    def take_image(self):
+    def take_image(self,directory):
         if self.mode == "prod":
             if not self.initialised:
                 self._init_camera()
-            filepath = storage.build_media_path("image")
+            filepath = storage.build_image_filepath(directory)
             self.cam.capture_file(filepath)
 
         elif self.mode == "dev":
             time.sleep(0.1)
-            filepath = storage.build_media_path("image")
+            filepath = storage.build_image_filepath(directory)
             create_mock_jpg(filepath)
 
         storage.update_last_image_taken(filepath)        
-
 
 
     ## not needed for lapsepi but left in for file completeness (for reuse in other projects later)

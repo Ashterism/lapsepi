@@ -9,7 +9,8 @@ class Storage:
         # save directories into temp memory)
         base_dir = Path(__file__).resolve().parent.parent.parent.parent
         data_dir = base_dir / "data"            # /data directory (e.g /lapsepi/data)
-        self.images_dir = data_dir / "images"   # taken images directory
+        self.single_img_dir = data_dir / "images"
+        self.session_dir = data_dir / "sessions"   # taken images directory
         self.videos_dir = data_dir / "videos"   # recorded video directory
         self.meta_dir = data_dir / "meta"       # metadata directory
 
@@ -21,23 +22,26 @@ class Storage:
         return(datetime.now().strftime("%Y-%m-%d"))
 
 
-    # CREATE FILE PATHS
-    def build_media_path(self, file_type):
-        if file_type == "image":
-            base_directory = self.images_dir
-            prefix = "img_"
-            extension = ".jpg"
-        else:
-            file_type == "video"
-            base_directory = self.videos_dir
-            prefix = "vid_"
-            extension = ".mp4"
+    # CREATE FOLDER PATHS
+    def build_folder_path(self, session_type):
+        if session_type == "single_image":
+            directory = self.single_img_dir
+        elif session_type == "timelapse":
+            base_directory = self.session_dir
 
-        # date folder (YYYY-MM-DD)
-        date_folder = self.create_datestamp()
-        directory = base_directory / date_folder
+             # date folder (YYYY-MM-DD)
+            date_folder = self.create_datestamp()
+            directory = base_directory / date_folder
+        
         directory.mkdir(parents=True, exist_ok=True)
-
+        return directory
+    
+    
+    # CREATE FILE PATH
+    def build_image_filepath(self, directory):
+        prefix = "img_"
+        extension = ".jpg"
+    
         filename = prefix + self.create_timestamp() + extension
         return directory / filename
 
@@ -75,3 +79,22 @@ class Storage:
         with open(file_path, "r") as json_file:
             data = json.load(json_file)
             return data.get("file_location")
+
+ # LOCKFILE HANDLING
+
+    def create_lockfile(self, name):
+        lock_path = self.meta_dir / f"{name}.lock"
+        self.meta_dir.mkdir(parents=True, exist_ok=True)
+
+        with open(lock_path, "w"):
+            pass
+
+    def check_lockfile(self, name):
+        lock_path = self.meta_dir / f"{name}.lock"
+        return lock_path.exists()
+
+
+    def delete_lockfile(self, name):
+        lock_path = self.meta_dir / f"{name}.lock"
+        if lock_path.exists():
+            lock_path.unlink()
