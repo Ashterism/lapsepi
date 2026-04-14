@@ -1,5 +1,7 @@
 import time
 from ..process.storage import Storage
+from ..process.last_image import update_last_image_taken
+
 from ..mocks.mock_file_maker import create_mock_jpg
 
 storage = Storage()
@@ -41,7 +43,7 @@ class Camera:
             filepath = storage.build_image_filepath(directory)
             create_mock_jpg(filepath)
 
-        storage.update_last_image_taken(filepath)        
+        update_last_image_taken(filepath)        
 
 
     ## not needed for lapsepi but left in for file completeness (for reuse in other projects later)

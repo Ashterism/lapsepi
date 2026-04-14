@@ -52,34 +52,6 @@ class Storage:
             json.dump(content, json_file)
         
 
-    # MANAGE LAST IMAGE TAKEN JSON
-    def update_last_image_taken(self, content):
-        self.meta_dir.mkdir(parents=True, exist_ok=True)
-        file_path = self.meta_dir / "last_image_taken.json"
-
-        datestamp = self.create_datestamp() + "_" + self.create_timestamp()
-
-        # store path relative to images_dir for portability
-        relative_path = Path(content).relative_to(self.images_dir)
-
-        full_content = {
-            "last_updated" : datestamp,
-            "file_location" : str(relative_path),
-        }
-
-        self.write_json(file_path, full_content)
-
-
-    def read_last_image_taken(self):
-        file_path = self.meta_dir / "last_image_taken.json"
-
-        if not file_path.exists():
-            return None
-
-        with open(file_path, "r") as json_file:
-            data = json.load(json_file)
-            return data.get("file_location")
-
  # LOCKFILE HANDLING
 
     def create_lockfile(self, name):
