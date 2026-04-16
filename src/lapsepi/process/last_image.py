@@ -11,7 +11,7 @@ def update_last_image_taken(content):
     datestamp = storage.create_datestamp() + "_" + storage.create_timestamp()
 
     # store path relative to images_dir for portability
-    relative_path = Path(content).relative_to(storage.test_dir)
+    relative_path = Path(content).relative_to(storage.data_dir)
 
     full_content = {
         "last_updated": datestamp,

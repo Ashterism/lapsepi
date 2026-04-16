@@ -8,11 +8,12 @@ class Storage:
     def __init__(self):
         # save directories into temp memory)
         base_dir = Path(__file__).resolve().parent.parent.parent.parent
-        data_dir = base_dir / "data"            # /data directory (e.g /lapsepi/data)
-        self.single_img_dir = data_dir / "images"
-        self.session_dir = data_dir / "sessions"   # taken images directory
-        self.videos_dir = data_dir / "videos"   # recorded video directory
-        self.meta_dir = data_dir / "meta"       # metadata directory
+        self.data_dir = base_dir / "data"            # /data directory (e.g /lapsepi/data)
+        self.single_img_dir = self.data_dir / "images"
+        self.session_dir = self.data_dir / "sessions"   # taken images directory
+        self.videos_dir = self.data_dir / "videos"   # recorded video directory
+        self.meta_dir = self.data_dir / "meta"       # metadata directory
+
 
     # HELPERS
     def create_timestamp(self):
@@ -37,7 +38,7 @@ class Storage:
         return directory
     
     
-    # CREATE FILE PATH
+# CREATE FILE PATH
     def build_image_filepath(self, directory):
         prefix = "img_"
         extension = ".jpg"
@@ -46,14 +47,13 @@ class Storage:
         return directory / filename
 
     
-    # READ / WRITE JSON
+# READ / WRITE JSON
     def write_json(self, file_path, content):
         with open(file_path, "w") as json_file:
             json.dump(content, json_file)
         
 
- # LOCKFILE HANDLING
-
+# LOCKFILE HANDLING
     def create_lockfile(self, name):
         lock_path = self.meta_dir / f"{name}.lock"
         self.meta_dir.mkdir(parents=True, exist_ok=True)

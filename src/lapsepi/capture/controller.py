@@ -1,45 +1,48 @@
+import time
+
 from .camera import Camera
 from ..process.storage import Storage
+from ..utils.environment_detector import detect_runmode
 
-
-camera = Camera()
+runmode = detect_runmode()
+camera = Camera(mode=runmode)
 storage = Storage()
 
 
+# CONTROL POINTS
 
-#@ wrapper
-def use_camera():
-    ...
-    # check lockfil
-    # exit if in use
-    # USE CAMERA OR TIMELAPSE
-    # remove lockfile
+def get_photo():
+    use_camera("single_image")
 
-
-
-def take_photo():
-    ...
-    # set path as one off image path
-    # create session file with relevnt imputs
-    # call camera once with path
-    # update session file
-
-
-def take_timelapse():
-    ...
-    # set path as sessions / images / date-time
-    # create session file with relevnt imputs
-    # call camera once with path
-    # update session file
+def get_timelapse():
+    use_camera("timelapse")
 
 
 """
-Thinking is can be function takes duration to run and interval
-calcs photos to take.  if 1... save to single shot folder, else... create session
+1. add a sessions file - probs easiest for all camera usage
+2. sort out use of dates and times in file / folder naming
+3. wire up front end for single image (image and time) display
+4. wire up timelapse to run 
+5. grey out timelapse button
 
-could be a "helper" function that means UI can call "take photo"
-and that just sets to 1 shot and 0 interval
+
+
 """
+
+# HELPERS
+
+def run_timelapse(directory, interval=None, runtime=None):
+    interval = 5
+    runtime = 15
+    photos_to_take = int(runtime/interval)
+
+    for i in range(photos_to_take):
+        camera.take_image(directory)
+        if i < photos_to_take - 1:
+            time.sleep(interval)
+
+
+# ORCHESTRATION
 
 def use_camera(session_type="single_image"):
 
@@ -58,7 +61,7 @@ def use_camera(session_type="single_image"):
         camera.take_image(directory)
 
     elif session_type == "timelapse":
-        # loop through iterations
+        run_timelapse(directory)
         ...
 
 
@@ -66,8 +69,9 @@ def use_camera(session_type="single_image"):
 
 
 if __name__ == "__main__":
-    use_camera()
-
+    storage.delete_lockfile("camera_in_use")
+    #use_camera()
+    get_timelapse()
 
 
 

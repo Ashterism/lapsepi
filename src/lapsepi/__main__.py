@@ -1,17 +1,18 @@
 import time
 
-from .utils.environment_detector import detect_runmode
+
 from .capture.camera import Camera
 
 
 
 
 def main():
-    runmode = detect_runmode()
-    camera = Camera(mode=runmode)
-
-    print(runmode)
-
+   
+   # check for lockfile
+        # if lockfile, note there was an issue
+        # and clear lockfile
+    
+    # start webserver (while... until told to stop?)
 
     interval = 10
     runtime = 20
