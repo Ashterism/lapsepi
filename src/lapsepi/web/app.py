@@ -1,14 +1,13 @@
-from flask import Flask, render_template, send_from_directory
-from flask import redirect
+from flask import Flask, render_template, send_from_directory, redirect, jsonify, request
 
-from ..controller.controller import get_photo, get_timelapse
+from ..control.controller import get_photo, get_timelapse
 from ..process.storage import Storage
 
 storage = Storage()
 
 app = Flask(__name__)
 
-
+# route to homepage
 @app.route("/")
 def home():
     last_image_record = storage.read_json(storage.meta_dir / "last_image_taken.json")
@@ -26,10 +25,13 @@ def home():
         else:
             taken_time = "-"
 
+    is_running = storage.check_lockfile("camera_in_use")
+
     return render_template(
         "index.html",
         image_path=image_path,
         taken_time=taken_time,
+        is_running=is_running,
     )
 
 
@@ -38,19 +40,34 @@ def home():
 def serve_image(filename):
     return send_from_directory(storage.data_dir, filename)
 
-
+# route to call "take single image" function
 @app.route("/take_photo", methods=["POST"])
 def take_photo():
     get_photo()
     return redirect("/")
 
-
+# route to call get timelapse (which runs in own process)
 @app.route("/take_timelapse", methods=["POST"])
 def take_timelapse():
-    get_timelapse()
+    interval = request.form.get("interval")
+    runtime = request.form.get("runtime")
+
+    get_timelapse(interval, runtime)
     return redirect("/")
 
+# route to check if camera in use (lockfile check)
+@app.route("/status")
+def status():
+    is_running = storage.check_lockfile("camera_in_use")
+    state = "RUNNING" if is_running else "IDLE"
 
+    return jsonify({
+        "state": state,
+        "latest_frame": None,
+        "frames_taken": None,
+    })
+
+# route to styleguide
 @app.route("/styleguide")
 def styleguide():
     return render_template(

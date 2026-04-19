@@ -19,16 +19,24 @@ def get_photo():
     storage.delete_lockfile("camera_in_use")
     
 
-def get_timelapse():
+def get_timelapse(interval, runtime):
+    if not interval or not runtime:
+        return
+    
     directory = use_camera("timelapse")
     if directory == None:
         return
-    subprocess.Popen([
+    
+    timelapse_process = subprocess.Popen([
         sys.executable,
         "-m",
         "lapsepi.capture.timelapse",
         str(directory),
+        str(interval),
+        str(runtime),
     ])
+
+    timelapse_pid = timelapse_process.pid
 
 
 """
