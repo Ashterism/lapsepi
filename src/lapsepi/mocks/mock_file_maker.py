@@ -1,4 +1,3 @@
-
 import random
 from PIL import Image, ImageDraw
 
@@ -7,7 +6,6 @@ IMAGE_WIDTH = 640
 IMAGE_HEIGHT = 480
 BACKGROUND_COLOUR = "black"
 STICKMAN_COLOUR = "blue"
-
 
 
 def create_mock_jpg(path):
@@ -44,5 +42,3 @@ def create_mock_jpg(path):
 
 if __name__ == "__main__":
     create_mock_jpg("stickman_test.jpg")
-
-

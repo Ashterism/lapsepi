@@ -1,11 +1,19 @@
-from flask import Flask, render_template, send_from_directory, redirect, jsonify, request
+from flask import (
+    Flask,
+    render_template,
+    send_from_directory,
+    redirect,
+    jsonify,
+    request,
+)
 
-from ..control.controller import get_photo, get_timelapse
+from ..control.controller import get_photo, get_timelapse, get_timelapse_stopped
 from ..process.storage import Storage
 
 storage = Storage()
 
 app = Flask(__name__)
+
 
 # route to homepage
 @app.route("/")
@@ -20,6 +28,7 @@ def home():
         raw_time = last_image_record.get("last_updated")
         if raw_time:
             from datetime import datetime
+
             dt = datetime.strptime(raw_time, "%Y-%m-%d_%H-%M-%S")
             taken_time = dt.strftime("%y/%m/%d %H:%M:%S")
         else:
@@ -40,11 +49,28 @@ def home():
 def serve_image(filename):
     return send_from_directory(storage.data_dir, filename)
 
+
+# route to check if camera in use (lockfile check)
+@app.route("/status")
+def status():
+    is_running = storage.check_lockfile("camera_in_use")
+    state = "RUNNING" if is_running else "IDLE"
+
+    return jsonify(
+        {
+            "state": state,
+            "latest_frame": None,
+            "frames_taken": None,
+        }
+    )
+
+
 # route to call "take single image" function
 @app.route("/take_photo", methods=["POST"])
 def take_photo():
     get_photo()
     return redirect("/")
+
 
 # route to call get timelapse (which runs in own process)
 @app.route("/take_timelapse", methods=["POST"])
@@ -55,28 +81,23 @@ def take_timelapse():
     get_timelapse(interval, runtime)
     return redirect("/")
 
-# route to check if camera in use (lockfile check)
-@app.route("/status")
-def status():
-    is_running = storage.check_lockfile("camera_in_use")
-    state = "RUNNING" if is_running else "IDLE"
 
-    return jsonify({
-        "state": state,
-        "latest_frame": None,
-        "frames_taken": None,
-    })
+# route to kill the timelapse process
+@app.route("/stop_timelapse", methods=["POST"])
+def stop_timelapse():
+    get_timelapse_stopped()
+    return redirect("/")
+
 
 # route to styleguide
 @app.route("/styleguide")
 def styleguide():
-    return render_template(
-        "styleguide.html"
-    )
+    return render_template("styleguide.html")
 
 
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
+
 
 """
 python -m lapsepi.web.app

@@ -23,6 +23,7 @@ class Camera:
     def _init_camera(self):
         if self.mode == "prod" and not self.initialised:
             from picamera2 import Picamera2
+
             self.cam = Picamera2()
 
             still_config = self.cam.create_still_configuration()
@@ -31,9 +32,8 @@ class Camera:
 
             self.initialised = True
 
-
     # capture a single image; uses real camera in prod, mock file in dev
-    def take_image(self,directory):
+    def take_image(self, directory):
         if self.mode == "prod":
             if not self.initialised:
                 self._init_camera()
@@ -45,7 +45,4 @@ class Camera:
             filepath = storage.build_image_filepath(directory)
             create_mock_jpg(filepath)
 
-        update_last_image_taken(filepath)        
-
-
-   
+        update_last_image_taken(filepath)

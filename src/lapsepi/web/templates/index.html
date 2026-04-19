@@ -85,9 +85,10 @@
 
 {% if is_running %}
 <section>
-    <button class="button" type="button">
-        Stop timelapse
-    </button>
+    <form method="post" action="/stop_timelapse">
+        <button class="button" type="submit">Stop timelapse</button>
+    </form>
+
 </section>
 {% endif %}
 

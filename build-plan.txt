@@ -42,6 +42,26 @@ A simple travel timelapse device that:
 >> add a process manager for... allowing timelapse to run independantly
 >> and be stopped
 
+"""
+	1.	move timelapse to its own runner file and get Popen working
+	2.	pass interval + runtime from UI into it
+	3.	add PID save/read/kill
+	4.	add stop button in UI using that
+	5.	align single-shot camera flow if needed
+
+    All done 
+""" 
+
+19-Apr: be handy now to add a "Last timelapse" type state to the timelapse
+details boxin the UI - to show date/ length/ state?  so you can see if it 
+was terminated?  otherwise just kill it and no sign its gone well.  start
+with terminated / successful?
+- also add a gallery of sorts to be able to see whats been captured?
+- longer term session states etc, but dont "need" that right now
+- basically gallery then... video timelapse function and then... v1?
+- oh, testing on pi, just do that last, it's easiest (then autostart on pi etc)
+
+
 --------------------------------------------------
 ## v0.3 – POST REFACTOR BASELINE
 [x] connect FE & BE single image UI (image + timestamp display)
