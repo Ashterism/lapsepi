@@ -33,7 +33,7 @@
         <section class="card image-card">
             <div class="card-body card-body-tight">
                 <h2 class="section-title">Last image</h2>
-                <p class="image-label">Taken: 26/04/05 20:00:25</p>
+                <p class="image-label">Taken: {{ taken_time }}</p>
             </div>
             <div class="preview-frame">
                 <img src="{{ image_path }}" class="preview-image" alt="Last captured image">
@@ -67,7 +67,9 @@
         </section>
 
         <section>
-            <button class="button" type="button">Start timelapse &rsaquo;</button>
+            <form method="post" action="/take_timelapse">
+                <button class="button" type="submit">Start timelapse &rsaquo;</button>
+            </form>
         </section>
     </main>
 </body>

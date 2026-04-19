@@ -3,6 +3,8 @@ from ..process.storage import Storage
 from ..process.last_image import update_last_image_taken
 
 from ..mocks.mock_file_maker import create_mock_jpg
+from ..utils.environment_detector import detect_runmode
+
 
 storage = Storage()
 
@@ -13,8 +15,8 @@ storage = Storage()
 # handles image/video capture; delegates file paths to Storage; switches between real and mock based on mode
 class Camera:
 
-    def __init__(self, mode="dev"):
-        self.mode = mode
+    def __init__(self, mode=None):
+        self.mode = mode or detect_runmode()
         self.cam = None
         self.initialised = False
 

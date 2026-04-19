@@ -1,4 +1,4 @@
-import json
+import json, shutil
 
 from datetime import datetime
 from pathlib import Path
@@ -32,7 +32,8 @@ class Storage:
 
              # date folder (YYYY-MM-DD)
             date_folder = self.create_datestamp()
-            directory = base_directory / date_folder
+            time_folder = self.create_timestamp()
+            directory = base_directory / date_folder / time_folder
         
         directory.mkdir(parents=True, exist_ok=True)
         return directory
@@ -51,6 +52,12 @@ class Storage:
     def write_json(self, file_path, content):
         with open(file_path, "w") as json_file:
             json.dump(content, json_file)
+
+    def read_json(self, file_path):
+        if not file_path.exists():
+            return None
+        with open(file_path, "r") as json_file:
+            return json.load(json_file)
         
 
 # LOCKFILE HANDLING
@@ -70,3 +77,25 @@ class Storage:
         lock_path = self.meta_dir / f"{name}.lock"
         if lock_path.exists():
             lock_path.unlink()
+
+
+
+    # CLEAR IMAGES
+    def clear_directory(self, directory):
+        if not directory.exists():
+            return
+        for item in directory.iterdir():
+            if item.is_file():
+                item.unlink()
+            elif item.is_dir():
+                shutil.rmtree(item)
+
+    def clear_images(self):
+        self.clear_directory(self.single_img_dir)
+
+    def clear_sessions(self):
+        self.clear_directory(self.session_dir)
+
+    def clear_all_media(self):
+        self.clear_images()
+        self.clear_sessions()

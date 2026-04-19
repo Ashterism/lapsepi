@@ -1,4 +1,3 @@
-
 LAPSEPI – BUILD PLAN
 
 END GOAL: v1
@@ -40,53 +39,61 @@ A simple travel timelapse device that:
 [x] commit working basic web view
 [x] tag release `v0.2`
 
+>> add a process manager for... allowing timelapse to run independantly
+>> and be stopped
+
 --------------------------------------------------
-## v0.3 – REAL CAMERA PARITY
-[ ] swap mock capture for real camera capture
-[ ] confirm same basic flow works on Pi
+## v0.3 – POST REFACTOR BASELINE
+[x] connect FE & BE single image UI (image + timestamp display)
+[ ] normalise date/time naming across files and folders
 [ ] save real test photo to correct folder
 [ ] confirm latest image appears in web UI
-[ ] commit working real camera test-shot flow
+[ ] commit working real camera + single image UI flow
 [ ] tag release `v0.3`
 
 --------------------------------------------------
-## v0.4 – SESSION LOGIC
-[ ] create new session folder per run
-[ ] store images inside session folder
-[ ] define session naming
-[ ] track whether a session is running
-[ ] stop session cleanly
-[ ] commit working session logic
+## v0.4 – TIMELAPSE CONTROL
+[ ] define interval + runtime inputs cleanly
+[ ] remove hardcoded timing values
+[ ] pass timing inputs through controller
+[ ] wire timelapse trigger from UI
+[ ] confirm end-to-end timelapse capture works
+[ ] commit working timelapse control flow
 [ ] tag release `v0.4`
 
 --------------------------------------------------
-## v0.5 – TIMELAPSE CAPTURE
-[ ] start repeated capture as a session
-[ ] support fixed interval options
-[ ] support fixed runtime options
-[ ] calculate expected frame count
-[ ] save captured images into active session
-[ ] commit working timelapse capture flow
+## v0.4.5 – PI VALIDATION
+[ ] swap mock capture for real camera capture
+[ ] confirm same flow works on Pi
+[ ] confirm timelapse works on Pi
+[ ] commit working Pi validation
+
+--------------------------------------------------
+## v0.5 – VIDEO OUTPUT
+[ ] integrate ffmpeg
+[ ] generate MP4 from captured images
+[ ] use fixed FPS (e.g. 30)
+[ ] save video alongside images
+[ ] confirm video output works end-to-end
+[ ] commit working video generation
 [ ] tag release `v0.5`
 
 --------------------------------------------------
-## v0.6 – VIDEO OUTPUT
-[ ] integrate ffmpeg
-[ ] generate MP4 from session images
-[ ] use fixed FPS (e.g. 30)
-[ ] save video in session folder
-[ ] keep source images
-[ ] commit working video output
+## v0.6 – GALLERY VIEW
+[ ] list sessions / folders
+[ ] display captured images
+[ ] display generated videos
+[ ] basic navigation between sessions
+[ ] commit working gallery view
 [ ] tag release `v0.6`
 
 --------------------------------------------------
-## v0.7 – WEB TIMELAPSE CONTROLS
-[ ] add interval dropdown (5s / 10s / 30s)
-[ ] add runtime dropdown (10m / 30m / 3h / 8h)
-[ ] show estimated frames
-[ ] show estimated video length
-[ ] add start / stop timelapse controls
-[ ] commit working timelapse web controls
+## v0.7 – STABILITY + CONTROL
+[ ] add lockfile check on startup
+[ ] report interrupted / failed runs
+[ ] clear stale lockfile automatically
+[ ] disable UI controls when camera in use
+[ ] commit stable control behaviour
 [ ] tag release `v0.7`
 
 --------------------------------------------------
