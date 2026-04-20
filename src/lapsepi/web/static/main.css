@@ -188,6 +188,7 @@ body {
     }
 }
 
+#create-video-form,
 #timelapse-form {
     display: contents;
 }
@@ -252,6 +253,15 @@ body {
     font-size: 2.2rem;
     line-height: 1;
     cursor: pointer;
+}
+
+.gallery-arrow:hover {
+    opacity: 0.85;
+}
+
+.gallery-arrow:active {
+    opacity: 0.6;
+    transform: translateY(-50%) scale(0.95);
 }
 
 .gallery-arrow-left {

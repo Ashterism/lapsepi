@@ -91,3 +91,103 @@ class Storage:
     def clear_all_media(self):
         self.clear_images()
         self.clear_sessions()
+
+
+    # Make media findable and accessible
+
+    def list_sessions(self):
+        sessions = []
+
+        if not self.session_dir.exists():
+            return sessions
+        
+        # iterate date folders
+        for date_dir in sorted(self.session_dir.iterdir(),reverse=True):
+            if not date_dir.is_dir():
+                continue
+
+            # iterate time folders in each date
+            for time_dir in sorted(date_dir.iterdir(), reverse=True):
+                if not time_dir.is_dir():
+                    continue
+
+                # relative path for FE
+                rel_path = time_dir.relative_to(self.data_dir)
+
+
+                # simple display label
+                label = f"{date_dir.name} {time_dir.name.replace('-',':')}"
+                sessions.append({
+                    "path": str(rel_path),
+                    "label": label
+                })
+
+        return sessions
+
+        
+    def list_session_media(self, session_path):
+        media = []
+
+        if not session_path:
+            return media
+
+        session_dir = self.data_dir / session_path
+
+        if not session_dir.exists() or not session_dir.is_dir():
+            return media
+
+        for item in sorted(session_dir.iterdir()):
+            if not item.is_file():
+                continue
+
+            if item.suffix.lower() != ".jpg":
+                continue
+
+            rel_path = item.relative_to(self.data_dir)
+            label = item.stem.replace("img_", "").replace("-", ":")
+
+            media.append({
+                "path": str(rel_path),
+                "label": label,
+            })
+
+        return media
+
+
+    def list_timelapse_vids(self):
+        videos = []
+
+        if not self.session_dir.exists():
+            return videos
+
+        for date_dir in sorted(self.session_dir.iterdir(), reverse=True):
+            if not date_dir.is_dir():
+                continue
+
+            for time_dir in sorted(date_dir.iterdir(), reverse=True):
+                if not time_dir.is_dir():
+                    continue
+
+                for item in sorted(time_dir.iterdir()):
+                    if not item.is_file():
+                        continue
+
+                    if item.suffix.lower() != ".mp4":
+                        continue
+
+                    rel_path = item.relative_to(self.data_dir)
+                    session_rel_path = time_dir.relative_to(self.data_dir)
+                    session_label = f"{date_dir.name} {time_dir.name.replace('-', ':')}"
+
+                    videos.append({
+                        "path": str(rel_path),
+                        "label": f"{session_label} - {item.name}",
+                        "session_path": str(session_rel_path),
+                        "session_label": session_label,
+                        "filename": item.name,
+                    })
+
+        return videos
+
+
+

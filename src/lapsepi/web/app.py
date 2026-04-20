@@ -7,7 +7,7 @@ from flask import (
     request,
 )
 
-from ..control.controller import get_photo, get_timelapse, get_timelapse_stopped
+from ..control.controller import get_photo, get_timelapse, get_timelapse_stopped, get_timelapse_video
 from ..process.storage import Storage
 
 storage = Storage()
@@ -89,17 +89,34 @@ def stop_timelapse():
     return redirect("/")
 
 
-# route to styleguide
-@app.route("/styleguide")
-def styleguide():
-    return render_template("styleguide.html")
-
-
 @app.route("/gallery")
 def gallery():
-    return render_template("gallery.html")
+
+    sessions = storage.list_sessions()
+    selected_session = request.args.get("session")
+    session_media = storage.list_session_media(selected_session)
+
+    timelapse_videos = storage.list_timelapse_vids()
+
+    return render_template(
+    "gallery.html",
+    sessions=sessions,
+    selected_session=selected_session,
+    session_media=session_media,
+    timelapse_videos=timelapse_videos,
+    )
 
 
+@app.route("/create_video", methods=["POST"])
+def create_video():
+    session_path = request.form.get("session")
+    fps = request.form.get("fps")
+
+    get_timelapse_video(session_path, fps)
+
+    return redirect(f"/gallery?session={session_path}")
+
+    
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
 

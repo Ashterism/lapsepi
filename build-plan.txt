@@ -73,24 +73,24 @@ A simple travel timelapse device that:
 
 --------------------------------------------------
 ## v0.6 – GALLERY VIEW
-[ ] list session folders from `data/sessions/`
-[ ] allow selecting a session folder
-[ ] display images from selected session
-[ ] show any generated video in that session if present
-[ ] keep this as a separate page from the home page
-[ ] commit working gallery page
+[x] list session folders from `data/sessions/`
+[x] allow selecting a session folder
+[x] display images from selected session
+[x] show any generated video in that session if present
+[x] keep this as a separate page from the home page
+[x] commit working gallery page
 [ ] tag release `v0.6`
 
 --------------------------------------------------
 ## v0.7 – VIDEO OUTPUT
-[ ] integrate ffmpeg
-[ ] create video from a chosen timelapse session
-[ ] use fixed FPS (e.g. 30)
-[ ] save video alongside session images
-[ ] connect create-video page to chosen session
-[ ] confirm video output works end-to-end
-[ ] commit working video generation
-[ ] tag release `v0.7`
+[x] integrate ffmpeg
+[x] create video from a chosen timelapse session
+[x] use fixed FPS (e.g. 30)
+[x] save video alongside session images
+[x] connect create-video page to chosen session
+[x] confirm video output works end-to-end
+[x] commit working video generation
+[x] tag release `v0.7`
 
 --------------------------------------------------
 ## v0.8 – V1 MVP POLISH
