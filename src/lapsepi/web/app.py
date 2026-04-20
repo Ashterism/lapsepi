@@ -95,6 +95,11 @@ def styleguide():
     return render_template("styleguide.html")
 
 
+@app.route("/gallery")
+def gallery():
+    return render_template("gallery.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
 

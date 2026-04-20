@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>lapsepi - gallery</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+    <main class="page">
+        <header class="card">
+            <div class="card-body card-body-tight page-header-row">
+                <div>
+                    <h1 class="page-title">lapsepi</h1>
+                    <p class="page-subtitle">Timelapse camera gallery</p>
+                </div>
+                <a href="/" class="icon-button" aria-label="Home">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                         stroke-width="1.5" stroke="currentColor" class="nav-icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                </a>
+            </div>
+        </header>
+
+        <section class="card">
+            <div class="card-body settings-card-body">
+                <h2 class="section-title">Timelapse sessions</h2>
+
+                <div class="controls-stack">
+                    <select name="image-session" class="select-control" id="image-session-select" aria-label="Image sessions">
+                        <option selected disabled value="">Sessions ↓</option>
+                        <option value="session_1">26/04/01 19:00:25</option>
+                    </select>
+                </div>
+
+                <p class="status-line">Session: 26/04/01 19:00:25</p>
+            </div>
+
+            <div class="gallery-preview-frame">
+                <button class="gallery-arrow gallery-arrow-left" type="button" aria-label="Previous image">◀</button>
+                <div class="preview-placeholder"></div>
+                <button class="gallery-arrow gallery-arrow-right" type="button" aria-label="Next image">▶</button>
+            </div>
+
+            <div class="card-body card-body-tight">
+                <p class="status-line">Image: 26/04/01 19:23:56</p>
+
+                <div class="controls-stack">
+                    <select name="image-select" class="select-control" id="image-select" aria-label="Select image">
+                        <option selected disabled value="">Select image ↓</option>
+                        <option value="img_1">26/04/01 19:23:56</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-body settings-card-body">
+                <h2 class="section-title">Timelapse videos</h2>
+
+                <div class="controls-stack">
+                    <select name="video-session" class="select-control" id="video-session-select" aria-label="Video sessions">
+                        <option selected disabled value="">Sessions ↓</option>
+                        <option value="session_1">26/04/01 19:00:25</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="gallery-preview-frame">
+                <div class="preview-placeholder"></div>
+            </div>
+
+            <div class="card-body card-body-tight">
+                <p class="status-line">30 fps, 1m 24s</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-body settings-card-body">
+                <h2 class="section-title">Create timelapse</h2>
+
+                <div class="controls-stack">
+                    <select name="create-session" class="select-control" id="create-session-select" aria-label="Create session">
+                        <option selected disabled value="">Session ↓</option>
+                        <option value="session_1">26/04/01 19:00:25</option>
+                    </select>
+
+                    <select name="fps" class="select-control" id="fps-select" aria-label="Frames per second">
+                        <option selected disabled value="">FPS ↓</option>
+                        <option value="24">24</option>
+                        <option value="30">30</option>
+                    </select>
+                </div>
+
+                <p class="estimate-text">Estimated runtime: 1m: 26sec</p>
+            </div>
+        </section>
+        <section>
+            <button class="button" type="button">Create timelapse video</button>
+        </section>
+    </main>
+</body>
+</html>

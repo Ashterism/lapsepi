@@ -64,13 +64,12 @@ A simple travel timelapse device that:
 
 --------------------------------------------------
 ## v0.5 – NAVIGATION + PLACEHOLDERS
-[ ] keep home page focused on capture / start / stop
-[ ] add route for gallery page
-[ ] add route for create-video page
-[ ] add placeholder templates for gallery page and create-video page
-[ ] add links / buttons from home page to those pages
-[ ] decide what inputs the gallery and create-video flows need
-[ ] commit placeholder page structure
+[x] keep home page focused on capture / start / stop
+[x] add route for gallery page
+[x] add placeholder templates for gallery page and create-video page
+[x] add links / buttons from home page to those pages
+[x] decide what inputs the gallery and create-video flows need
+[x] commit placeholder page structure
 
 --------------------------------------------------
 ## v0.6 – GALLERY VIEW
@@ -96,6 +95,7 @@ A simple travel timelapse device that:
 --------------------------------------------------
 ## v0.8 – V1 MVP POLISH
 [ ] add a simple "timelapse state" / "last run" line to the UI
+[ ] timelapse settings don't need to show when one running
 [ ] show whether the last run completed or was terminated
 [ ] keep session details lightweight; do not build full session management yet
 [ ] make sure controls behave sensibly while a timelapse is running
