@@ -3,6 +3,8 @@ from ..process.storage import Storage
 from ..process.last_image import update_last_image_taken
 
 from ..mocks.mock_file_maker import create_mock_jpg
+from ..utils.environment_detector import detect_runmode
+
 
 storage = Storage()
 
@@ -13,14 +15,15 @@ storage = Storage()
 # handles image/video capture; delegates file paths to Storage; switches between real and mock based on mode
 class Camera:
 
-    def __init__(self, mode="dev"):
-        self.mode = mode
+    def __init__(self, mode=None):
+        self.mode = mode or detect_runmode()
         self.cam = None
         self.initialised = False
 
     def _init_camera(self):
         if self.mode == "prod" and not self.initialised:
             from picamera2 import Picamera2
+
             self.cam = Picamera2()
 
             still_config = self.cam.create_still_configuration()
@@ -29,9 +32,8 @@ class Camera:
 
             self.initialised = True
 
-
     # capture a single image; uses real camera in prod, mock file in dev
-    def take_image(self,directory):
+    def take_image(self, directory):
         if self.mode == "prod":
             if not self.initialised:
                 self._init_camera()
@@ -43,7 +45,4 @@ class Camera:
             filepath = storage.build_image_filepath(directory)
             create_mock_jpg(filepath)
 
-        update_last_image_taken(filepath)        
-
-
-   
+        update_last_image_taken(filepath)

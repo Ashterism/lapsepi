@@ -104,8 +104,31 @@ body {
     cursor: pointer;
 }
 
+.button:disabled {
+    cursor: default;
+}
+
+.button-disabled,
+.button-running {
+    background: #9a9a9a;
+    color: #333333;
+    filter: none;
+    transform: none;
+}
+
 .button:hover {
     filter: brightness(0.98);
+}
+
+.button-disabled:hover,
+.button-running:hover {
+    filter: none;
+}
+
+.button:active,
+.button-running:active,
+.button-disabled:active {
+    transform: none;
 }
 
 .button:focus-visible,
@@ -163,4 +186,8 @@ body {
         padding-left: 24px;
         padding-right: 24px;
     }
+}
+
+#timelapse-form {
+    display: contents;
 }

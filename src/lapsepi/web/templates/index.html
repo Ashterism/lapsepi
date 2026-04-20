@@ -18,7 +18,7 @@
         <section class="card">
             <div class="card-body">
                 <h2 class="section-title">Status</h2>
-                <p class="status-line">Status: READY</p>
+                <p class="status-line">Status: {{ "RUNNING" if is_running else "READY" }}</p>
                 <p class="status-line">Power: connected</p>
                 <p class="status-line">Storage: 12.4GB free</p>
             </div>
@@ -26,49 +26,178 @@
 
         <section>
             <form method="post" action="/take_photo">
-                <button class="button" type="submit">Take test photo</button>
+                <button class="button{% if is_running %} button-disabled{% endif %}" type="submit" {% if is_running %}disabled{% endif %}>Take test photo</button>
             </form>
         </section>
 
         <section class="card image-card">
             <div class="card-body card-body-tight">
                 <h2 class="section-title">Last image</h2>
-                <p class="image-label">Taken: 26/04/05 20:00:25</p>
+                <p class="image-label">Taken: {{ taken_time }}</p>
             </div>
             <div class="preview-frame">
                 <img src="{{ image_path }}" class="preview-image" alt="Last captured image">
             </div>
         </section>
 
-        <section class="card">
-            <div class="card-body settings-card-body">
-                <h2 class="section-title">Timelapse settings</h2>
+        <form method="post" action="/take_timelapse" id="timelapse-form">
 
-                <div class="controls-stack">
-                    <select class="select-control" aria-label="Interval">
-                        <option selected>Interval ↓</option>
-                        <option>5 seconds</option>
-                        <option>10 seconds</option>
-                        <option>30 seconds</option>
-                    </select>
+            <section class="card">
+                <div class="card-body settings-card-body">
+                    <h2 class="section-title">Timelapse settings</h2>
 
-                    <select class="select-control" aria-label="Run time">
-                        <option selected>Run time ↓</option>
-                        <option>10 minutes</option>
-                        <option>30 minutes</option>
-                        <option>3 hours</option>
-                        <option>8 hours</option>
-                    </select>
+                    <div class="controls-stack">
+                        <select name="interval" class="select-control" id="interval-select" aria-label="Interval">
+                            <option selected disabled value="">Interval ↓</option>
+                            <option value="5">5 seconds</option>
+                            <option value="10">10 seconds</option>
+                            <option value="30">30 seconds</option>
+                        </select>
+
+                        <select name="runtime" class="select-control" id="runtime-select" aria-label="Run time">
+                            <option selected disabled value="">Run time ↓</option>
+                            <option value="15">15 seconds</option>
+                            <option value="600">10 minutes</option>
+                            <option value="1800">30 minutes</option>
+                            <option value="10800">3 hours</option>
+                            <option value="28800">8 hours</option>
+                        </select>
+                    </div>
+
+                    <p class="estimate-text">Estimated frames / length (30fps):</p>
+                    <p class="estimate-text">
+                        <span id="estimated-frames">-</span> frames /
+                        <span id="estimated-length">-</span> video
+                    </p>
                 </div>
+            </section>
 
-                <p class="estimate-text">Estimated frames / length (30fps):</p>
-                <p class="estimate-text">~180 frames / ~6s video</p>
+            <section>
+                <button id="timelapse-button"
+                    class="button{% if is_running %} button-running{% endif %}"
+                    type="submit"
+                    {% if is_running %}disabled{% endif %}>
+                    Start timelapse &rsaquo;
+                </button>
+            </section>
+
+        </form>
+
+{% if is_running %}
+<section>
+    <form method="post" action="/stop_timelapse">
+        <button class="button" type="submit">Stop timelapse</button>
+    </form>
+
+</section>
+{% endif %}
+
+        <section class="card">
+            <div class="card-body">
+                <h2 class="section-title">Timelapse details</h2>
+                <p class="status-line">State: <span id="timelapse-state">{{ "RUNNING" if is_running else "IDLE" }}</span></p>
+                {% if is_running %}
+                <p class="status-line">Latest frame: <span id="timelapse-latest">-</span></p>
+                <p class="status-line">Frames taken: <span id="timelapse-count">-</span></p>
+                {% endif %}
             </div>
         </section>
-
-        <section>
-            <button class="button" type="button">Start timelapse &rsaquo;</button>
-        </section>
     </main>
+    <script>
+        const isRunning = {{ 'true' if is_running else 'false' }};
+        const timelapseForm = document.getElementById("timelapse-form");
+        const timelapseButton = document.getElementById("timelapse-button");
+        const timelapseState = document.getElementById("timelapse-state");
+
+        const intervalSelect = document.getElementById("interval-select");
+        const runtimeSelect = document.getElementById("runtime-select");
+        const estimatedFrames = document.getElementById("estimated-frames");
+        const estimatedLength = document.getElementById("estimated-length");
+
+        function formatVideoLength(seconds) {
+            if (seconds < 60) {
+                return `~${seconds}s`;
+            }
+
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+
+            if (remainingSeconds === 0) {
+                return `~${minutes}m`;
+            }
+
+            return `~${minutes}m ${remainingSeconds}s`;
+        }
+
+        function updateEstimate() {
+            if (!intervalSelect || !runtimeSelect || !estimatedFrames || !estimatedLength) {
+                return;
+            }
+
+            const interval = Number(intervalSelect.value);
+            const runtime = Number(runtimeSelect.value);
+
+            if (!interval || !runtime) {
+                estimatedFrames.textContent = "-";
+                estimatedLength.textContent = "-";
+                return;
+            }
+
+            const frames = Math.floor(runtime / interval);
+            const videoSeconds = Math.max(1, Math.floor(frames / 30));
+
+            estimatedFrames.textContent = `~${frames}`;
+            estimatedLength.textContent = formatVideoLength(videoSeconds);
+        }
+
+        if (intervalSelect) {
+            intervalSelect.addEventListener("change", updateEstimate);
+        }
+
+        if (runtimeSelect) {
+            runtimeSelect.addEventListener("change", updateEstimate);
+        }
+
+        updateEstimate();
+
+        if (timelapseForm && timelapseButton) {
+            timelapseForm.addEventListener("submit", function () {
+                timelapseButton.disabled = true;
+                timelapseButton.classList.add("button-running");
+            });
+        }
+
+        if (isRunning) {
+            setInterval(async function () {
+                try {
+                    const response = await fetch("/status");
+                    if (!response.ok) return;
+
+                    const data = await response.json();
+
+                    if (timelapseState && data.state) {
+                        timelapseState.textContent = data.state;
+                    }
+
+                    const latest = document.getElementById("timelapse-latest");
+                    const count = document.getElementById("timelapse-count");
+
+                    if (latest && data.latest_frame !== undefined) {
+                        latest.textContent = data.latest_frame || "-";
+                    }
+
+                    if (count && data.frames_taken !== undefined) {
+                        count.textContent = data.frames_taken;
+                    }
+
+                    if (data.state === "IDLE") {
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error("Status check failed", error);
+                }
+            }, 5000);
+        }
+    </script>
 </body>
 </html>
