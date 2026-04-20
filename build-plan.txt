@@ -60,7 +60,7 @@ A simple travel timelapse device that:
 [x] confirm end-to-end timelapse capture works
 [x] add basic terminated run marker (`terminated.json`)
 [x] commit working timelapse control flow
-[ ] tag release `v0.4`
+[x] tag release `v0.4`
 
 --------------------------------------------------
 ## v0.5 – NAVIGATION + PLACEHOLDERS
