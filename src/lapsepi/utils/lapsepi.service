@@ -1,0 +1,13 @@
+[Unit]
+Description=Keep lapsepi running even after restart
+After=multi-user.target
+
+[Service]
+Type=simple
+RemainAfterExit=no
+WorkingDirectory=/home/ash/lapsepi
+ExecStart=/home/ash/lapsepi/.venv/bin/python3 -m lapsepi
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

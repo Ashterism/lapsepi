@@ -93,48 +93,90 @@ A simple travel timelapse device that:
 [x] tag release `v0.7`
 
 --------------------------------------------------
-## v0.8 – V1 MVP POLISH
-[ ] add a simple "timelapse state" / "last run" line to the UI
-[ ] timelapse settings don't need to show when one running
-[ ] show whether the last run completed or was terminated
-[ ] keep session details lightweight; do not build full session management yet
-[ ] make sure controls behave sensibly while a timelapse is running
-[ ] commit MVP polish
-[ ] tag release `v0.8`
+## v0.8 – DOWNLOAD OUTPUT
+[ ] download MP4 via browser
+[ ] commit working download flow
 
 --------------------------------------------------
-## v0.9 – DOWNLOAD OUTPUT
-[ ] download MP4 via browser
-[ ] optionally download selected images / whole session later
-[ ] commit working download flow
+
+## v0.9 – BOOT + RECOVERY
+[ ] define boot flow for Pi device startup
+[ ] create startup script / service that runs on boot
+[ ] wait for system to finish booting enough for app startup
+[ ] launch `python -m lapsepi` automatically on boot
+[ ] confirm app starts reliably after reboot without manual SSH/login
+[ ] on startup, check for stale lockfile / dirty shutdown
+[ ] if dirty shutdown detected, log it clearly
+[ ] clear stale lock / stale pid state so a new session can run
+[ ] confirm interrupted previous run does not block next run
+[ ] commit working boot + recovery flow
 [ ] tag release `v0.9`
+
+--------------------------------------------------
+## v0.95 – CONNECTIVITY MODES
+[ ] define default connectivity behaviour on boot
+[ ] decide whether default should be hotspot-first, Wi-Fi-first, or fallback-based
+[ ] confirm there is always a reliable phone-access path when out and about
+[ ] support hotspot mode so phone can connect directly to the Pi
+[ ] support known Wi-Fi mode for easier access and maintenance when networks exist
+[ ] define simple behaviour for updates / admin access when Wi-Fi is available
+[ ] keep connectivity logic outside Flask where possible
+[ ] confirm web UI is reachable in both hotspot and Wi-Fi modes
+[ ] commit working connectivity flow
+[ ] tag release `v0.95`
 
 --------------------------------------------------
 ## v0.10 – READY
 [ ] use it for a real timelapse (travel / window / outdoors)
 [ ] produce a usable video
 [ ] retrieve video via phone successfully
+[ ] confirm real-world access flow works without needing a laptop
 [ ] commit v0.10
 [ ] tag release `v0.10`
 
 --------------------------------------------------
 ## v1 – PI VALIDATION
-[ ] confirm same flow works on Pi
+[ ] confirm same flow works on Pi hardware
+[ ] confirm test photo works on Pi
 [ ] confirm timelapse works on Pi
 [ ] confirm video generation works on Pi
 [ ] confirm basic browser access from phone on Pi
+[ ] confirm reboot returns device to usable state
+[ ] run at least one real unattended timelapse on Pi
+[ ] retrieve usable video via phone successfully
 [ ] commit working Pi validation
 [ ] tag release `v1.0`
+
+--------------------------------------------------
+## v1.1 – V1 MVP POLISH
+[ ] add a simple "timelapse state" / "last run" line to the UI
+[ ] timelapse settings don't need to show when one running
+[ ] show whether the last run completed or was terminated
+[ ] keep session details lightweight; do not build full session management yet
+[ ] make sure controls behave sensibly while a timelapse is running
+[ ] hide or disable create-video controls while a timelapse is running
+[ ] make gallery / video selection states sensible when no media exists
+[ ] show basic success / failure feedback after video creation
+[ ] decide whether selected image download is needed now or can wait
+[ ] optionally download selected images / whole session later
+[ ] commit MVP polish
+[ ] tag release `v0.8`
 
 --------------------------------------------------
 ## V2 / LATER
 [ ] proper session details / session state model
 [ ] richer status / error handling
-[ ] interrupted run detection on startup
-[ ] clear stale lockfile automatically
-[ ] add physical button / status light
-[ ] add wifi on / off control
+[ ] add wifi on / off control in the UI
+[ ] add clearer visibility of current connectivity mode in the UI
+[ ] add smarter switching rules between hotspot and Wi-Fi if needed
 [ ] tidy archive once core structure is settled
+
+--------------------------------------------------
+## V4 / HARDWARE CONTROLS – LATER
+[ ] add status LED
+[ ] add safe shutdown / off button
+[ ] define button / LED behaviour clearly
+[ ] confirm safe shutdown reduces dirty close risk
 
 --------------------------------------------------
 ## CURRENT SHAPE / NOTES
@@ -142,7 +184,13 @@ A simple travel timelapse device that:
 - Gallery should be its own page.
 - Create-video should be its own page.
 - Full session details can wait until V2.
-- Testing on Pi happens late, once local flow is solid.
+- This needs to behave like a small appliance, not just a Python app.
+- Boot, dirty shutdown recovery, and reliable restart are part of getting to v1.
+- A stale lockfile must never leave the device unusable after power loss.
+- Phone access must still work when there is no external Wi-Fi available.
+- Known Wi-Fi is useful for updates, admin, and easier access when networks exist.
+- Connectivity should be handled simply and robustly; clever switching can come later.
+- Hardware controls like LED and off button can come later, once software recovery is solid.
 
 --------------------------------------------------
 ## TARGET FILE TREE

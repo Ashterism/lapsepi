@@ -90,7 +90,7 @@
             </div>
 
             <div class="card-body card-body-tight">
-                <p class="status-line">Video:</p>
+                <p class="status-line"><a id="download-video-link" href="#" download>Download MP4</a></p>
             </div>
         </section>
 
@@ -141,6 +141,7 @@
     const videoSelect = document.getElementById("video-select");
     const previewVideo = document.getElementById("preview-video");
     const timelapseVideoData = document.getElementById("timelapse-video-data");
+    const downloadVideoLink = document.getElementById("download-video-link");
 
     let sessionMedia = [];
     let timelapseVideos = [];
@@ -208,7 +209,7 @@
     }
 
     function updateGalleryVideo() {
-        if (!videoSelect || !previewVideo || !timelapseVideos.length) {
+        if (!videoSelect || !previewVideo || !downloadVideoLink || !timelapseVideos.length) {
             return;
         }
 
@@ -217,11 +218,18 @@
         });
 
         if (!selectedVideo) {
+            previewVideo.removeAttribute("src");
+            previewVideo.load();
+            downloadVideoLink.href = "#";
+            downloadVideoLink.removeAttribute("download");
             return;
         }
 
         previewVideo.src = "/data/" + selectedVideo.path;
         previewVideo.load();
+
+        downloadVideoLink.href = "/data/" + selectedVideo.path;
+        downloadVideoLink.setAttribute("download", selectedVideo.filename || "timelapse.mp4");
     }
 
     if (imageSelect && previewImage && sessionMedia.length) {
@@ -266,8 +274,9 @@
         }
     }
 
-    if (videoSelect && previewVideo && timelapseVideos.length) {
+    if (videoSelect && previewVideo && downloadVideoLink && timelapseVideos.length) {
         videoSelect.addEventListener("change", updateGalleryVideo);
+        updateGalleryVideo();
     }
 
     const fpsSelect = document.getElementById("fps-select");
