@@ -20,19 +20,24 @@ app = Flask(__name__)
 def home():
     last_image_record = storage.read_json(storage.meta_dir / "last_image_taken.json")
 
-    if not last_image_record:
-        image_path = "/static/imgs/no_image.png"
-        taken_time = "-"
-    else:
-        image_path = f"/data/{last_image_record['file_location']}"
-        raw_time = last_image_record.get("last_updated")
-        if raw_time:
-            from datetime import datetime
+    image_path = "/static/imgs/no_image.png"
+    taken_time = "-"
 
-            dt = datetime.strptime(raw_time, "%Y-%m-%d_%H-%M-%S")
-            taken_time = dt.strftime("%y/%m/%d %H:%M:%S")
-        else:
-            taken_time = "-"
+    if last_image_record:
+        file_location = last_image_record.get("file_location")
+        raw_time = last_image_record.get("last_updated")
+
+        if file_location:
+            actual_image_path = storage.data_dir / file_location
+
+            if actual_image_path.exists():
+                image_path = f"/data/{file_location}"
+
+                if raw_time:
+                    from datetime import datetime
+
+                    dt = datetime.strptime(raw_time, "%Y-%m-%d_%H-%M-%S")
+                    taken_time = dt.strftime("%y/%m/%d %H:%M:%S")
 
     is_running = storage.check_lockfile("camera_in_use")
 
@@ -97,6 +102,7 @@ def gallery():
     session_media = storage.list_session_media(selected_session)
 
     timelapse_videos = storage.list_timelapse_vids()
+
 
     return render_template(
     "gallery.html",
