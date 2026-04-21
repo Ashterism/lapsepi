@@ -27,8 +27,13 @@ def create_timelapse_video(session_path, fps=30):
 
     if not media:
         return None
+    
+    session_time = session_dir.name           # 13-48-46
+    session_date = session_dir.parent.name    # 2026-04-21
 
-    output_path = session_dir / f"timelapse_{fps}.mp4"
+    filename = f"lapse{session_date[2:].replace('-', '')}_{session_time[:5].replace('-', '')}.mp4"
+
+    output_path = session_dir / filename
     file_list_path = session_dir / "file_list.txt"
 
     frame_duration = 1 / fps

@@ -109,6 +109,11 @@
                 <p class="status-line">Latest frame: <span id="timelapse-latest">-</span></p>
                 <p class="status-line">Frames taken: <span id="timelapse-count">-</span></p>
                 {% endif %}
+                {% if is_running %}
+                <section>
+                    <button id="refresh-details-button" class="button" type="button">Refresh details</button>
+                </section>
+                {% endif %}
             </div>
         </section>
     </main>
@@ -117,6 +122,7 @@
         const timelapseForm = document.getElementById("timelapse-form");
         const timelapseButton = document.getElementById("timelapse-button");
         const timelapseState = document.getElementById("timelapse-state");
+        const refreshDetailsButton = document.getElementById("refresh-details-button");
 
         const intervalSelect = document.getElementById("interval-select");
         const runtimeSelect = document.getElementById("runtime-select");
@@ -176,36 +182,42 @@
             });
         }
 
-        if (isRunning) {
-            setInterval(async function () {
-                try {
-                    const response = await fetch("/status");
-                    if (!response.ok) return;
+        async function refreshTimelapseStatus() {
+            try {
+                const response = await fetch("/status");
+                if (!response.ok) return;
 
-                    const data = await response.json();
+                const data = await response.json();
 
-                    if (timelapseState && data.state) {
-                        timelapseState.textContent = data.state;
-                    }
-
-                    const latest = document.getElementById("timelapse-latest");
-                    const count = document.getElementById("timelapse-count");
-
-                    if (latest && data.latest_frame !== undefined) {
-                        latest.textContent = data.latest_frame || "-";
-                    }
-
-                    if (count && data.frames_taken !== undefined) {
-                        count.textContent = data.frames_taken;
-                    }
-
-                    if (data.state === "IDLE") {
-                        window.location.reload();
-                    }
-                } catch (error) {
-                    console.error("Status check failed", error);
+                if (timelapseState && data.state) {
+                    timelapseState.textContent = data.state;
                 }
-            }, 5000);
+
+                const latest = document.getElementById("timelapse-latest");
+                const count = document.getElementById("timelapse-count");
+
+                if (latest && data.latest_frame !== undefined) {
+                    latest.textContent = data.latest_frame || "-";
+                }
+
+                if (count && data.frames_taken !== undefined) {
+                    count.textContent = data.frames_taken;
+                }
+
+                if (data.state === "IDLE") {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error("Status check failed", error);
+            }
+        }
+
+        if (refreshDetailsButton) {
+            refreshDetailsButton.addEventListener("click", refreshTimelapseStatus);
+        }
+
+        if (isRunning) {
+            setInterval(refreshTimelapseStatus, 10000);
         }
     </script>
 </body>
