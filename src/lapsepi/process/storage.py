@@ -57,6 +57,10 @@ class Storage:
         with open(file_path, "r") as json_file:
             return json.load(json_file)
 
+    def delete_file(self, file_path):
+        if file_path.exists() and file_path.is_file():
+            file_path.unlink()
+
     # LOCKFILE HANDLING
     def create_lockfile(self, name):
         lock_path = self.meta_dir / f"{name}.lock"
