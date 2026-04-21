@@ -5,6 +5,7 @@ from ..process import pid_manager as pid
 from ..capture.camera import Camera
 from ..capture.timelapse import stop_timelapse
 from ..process.storage import Storage
+from ..process.video_maker import create_timelapse_video
 
 
 # runmode = detect_runmode()
@@ -20,6 +21,7 @@ def get_photo():
     if directory == None:
         return
     camera.take_image(directory)
+    camera.close_camera()
     storage.delete_lockfile("camera_in_use")
 
 
@@ -47,6 +49,10 @@ def get_timelapse(interval, runtime):
 
 def get_timelapse_stopped():
     stop_timelapse()
+
+
+def get_timelapse_video(session_path, fps):
+    return create_timelapse_video(session_path, fps)
 
 
 # HELPER

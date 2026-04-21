@@ -46,3 +46,15 @@ class Camera:
             create_mock_jpg(filepath)
 
         update_last_image_taken(filepath)
+
+
+    def close_camera(self):
+        if self.mode == "prod" and self.cam:
+            try:
+                self.cam.stop()
+                self.cam.close()
+            except Exception:
+                pass  # don’t let cleanup crash things
+
+            self.cam = None
+            self.initialised = False

@@ -60,53 +60,68 @@ A simple travel timelapse device that:
 [x] confirm end-to-end timelapse capture works
 [x] add basic terminated run marker (`terminated.json`)
 [x] commit working timelapse control flow
-[ ] tag release `v0.4`
+[x] tag release `v0.4`
 
 --------------------------------------------------
 ## v0.5 – NAVIGATION + PLACEHOLDERS
-[ ] keep home page focused on capture / start / stop
-[ ] add route for gallery page
-[ ] add route for create-video page
-[ ] add placeholder templates for gallery page and create-video page
-[ ] add links / buttons from home page to those pages
-[ ] decide what inputs the gallery and create-video flows need
-[ ] commit placeholder page structure
+[x] keep home page focused on capture / start / stop
+[x] add route for gallery page
+[x] add placeholder templates for gallery page and create-video page
+[x] add links / buttons from home page to those pages
+[x] decide what inputs the gallery and create-video flows need
+[x] commit placeholder page structure
 
 --------------------------------------------------
 ## v0.6 – GALLERY VIEW
-[ ] list session folders from `data/sessions/`
-[ ] allow selecting a session folder
-[ ] display images from selected session
-[ ] show any generated video in that session if present
-[ ] keep this as a separate page from the home page
-[ ] commit working gallery page
+[x] list session folders from `data/sessions/`
+[x] allow selecting a session folder
+[x] display images from selected session
+[x] show any generated video in that session if present
+[x] keep this as a separate page from the home page
+[x] commit working gallery page
 [ ] tag release `v0.6`
 
 --------------------------------------------------
 ## v0.7 – VIDEO OUTPUT
-[ ] integrate ffmpeg
-[ ] create video from a chosen timelapse session
-[ ] use fixed FPS (e.g. 30)
-[ ] save video alongside session images
-[ ] connect create-video page to chosen session
-[ ] confirm video output works end-to-end
-[ ] commit working video generation
-[ ] tag release `v0.7`
+[x] integrate ffmpeg
+[x] create video from a chosen timelapse session
+[x] use fixed FPS (e.g. 30)
+[x] save video alongside session images
+[x] connect create-video page to chosen session
+[x] confirm video output works end-to-end
+[x] commit working video generation
+[x] tag release `v0.7`
 
 --------------------------------------------------
-## v0.8 – V1 MVP POLISH
-[ ] add a simple "timelapse state" / "last run" line to the UI
-[ ] show whether the last run completed or was terminated
-[ ] keep session details lightweight; do not build full session management yet
-[ ] make sure controls behave sensibly while a timelapse is running
-[ ] commit MVP polish
+## v0.7.5 – DOWNLOAD OUTPUT
+[x] download MP4 via browser
+[x] commit working download flow
+
+--------------------------------------------------
+## v0.8 – BOOT + RECOVERY
+[ ] define boot flow for Pi device startup
+[x] create startup script / service that runs on boot
+[x] wait for system to finish booting enough for app startup
+[ ] launch `python -m lapsepi` automatically on boot
+[ ] confirm app starts reliably after reboot without manual SSH/login
+[x] on startup, check for stale lockfile / dirty shutdown
+[x] if dirty shutdown detected, log it clearly
+[x] clear stale lock / stale pid state so a new session can run
+[x] confirm interrupted previous run does not block next run
+[ ] commit working boot + recovery flow
 [ ] tag release `v0.8`
 
 --------------------------------------------------
-## v0.9 – DOWNLOAD OUTPUT
-[ ] download MP4 via browser
-[ ] optionally download selected images / whole session later
-[ ] commit working download flow
+## v0.9 – CONNECTIVITY MODES
+[ ] define default connectivity behaviour on boot
+[ ] decide whether default should be hotspot-first, Wi-Fi-first, or fallback-based
+[ ] confirm there is always a reliable phone-access path when out and about
+[ ] support hotspot mode so phone can connect directly to the Pi
+[ ] support known Wi-Fi mode for easier access and maintenance when networks exist
+[ ] define simple behaviour for updates / admin access when Wi-Fi is available
+[ ] keep connectivity logic outside Flask where possible
+[ ] confirm web UI is reachable in both hotspot and Wi-Fi modes
+[ ] commit working connectivity flow
 [ ] tag release `v0.9`
 
 --------------------------------------------------
@@ -114,27 +129,53 @@ A simple travel timelapse device that:
 [ ] use it for a real timelapse (travel / window / outdoors)
 [ ] produce a usable video
 [ ] retrieve video via phone successfully
+[ ] confirm real-world access flow works without needing a laptop
 [ ] commit v0.10
 [ ] tag release `v0.10`
 
 --------------------------------------------------
 ## v1 – PI VALIDATION
-[ ] confirm same flow works on Pi
+[ ] confirm same flow works on Pi hardware
+[ ] confirm test photo works on Pi
 [ ] confirm timelapse works on Pi
 [ ] confirm video generation works on Pi
 [ ] confirm basic browser access from phone on Pi
+[ ] confirm reboot returns device to usable state
+[ ] run at least one real unattended timelapse on Pi
+[ ] retrieve usable video via phone successfully
 [ ] commit working Pi validation
 [ ] tag release `v1.0`
+
+--------------------------------------------------
+## v1.1 – V1 MVP POLISH
+[ ] add a simple "timelapse state" / "last run" line to the UI
+[ ] timelapse settings don't need to show when one running
+[ ] show whether the last run completed or was terminated
+[ ] keep session details lightweight; do not build full session management yet
+[ ] make sure controls behave sensibly while a timelapse is running
+[ ] hide or disable create-video controls while a timelapse is running
+[ ] make gallery / video selection states sensible when no media exists
+[ ] show basic success / failure feedback after video creation
+[ ] decide whether selected image download is needed now or can wait
+[ ] optionally download selected images / whole session later
+[ ] commit MVP polish
+[ ] tag release `v0.8`
 
 --------------------------------------------------
 ## V2 / LATER
 [ ] proper session details / session state model
 [ ] richer status / error handling
-[ ] interrupted run detection on startup
-[ ] clear stale lockfile automatically
-[ ] add physical button / status light
-[ ] add wifi on / off control
+[ ] add wifi on / off control in the UI
+[ ] add clearer visibility of current connectivity mode in the UI
+[ ] add smarter switching rules between hotspot and Wi-Fi if needed
 [ ] tidy archive once core structure is settled
+
+--------------------------------------------------
+## V4 / HARDWARE CONTROLS – LATER
+[ ] add status LED
+[ ] add safe shutdown / off button
+[ ] define button / LED behaviour clearly
+[ ] confirm safe shutdown reduces dirty close risk
 
 --------------------------------------------------
 ## CURRENT SHAPE / NOTES
@@ -142,7 +183,13 @@ A simple travel timelapse device that:
 - Gallery should be its own page.
 - Create-video should be its own page.
 - Full session details can wait until V2.
-- Testing on Pi happens late, once local flow is solid.
+- This needs to behave like a small appliance, not just a Python app.
+- Boot, dirty shutdown recovery, and reliable restart are part of getting to v1.
+- A stale lockfile must never leave the device unusable after power loss.
+- Phone access must still work when there is no external Wi-Fi available.
+- Known Wi-Fi is useful for updates, admin, and easier access when networks exist.
+- Connectivity should be handled simply and robustly; clever switching can come later.
+- Hardware controls like LED and off button can come later, once software recovery is solid.
 
 --------------------------------------------------
 ## TARGET FILE TREE
