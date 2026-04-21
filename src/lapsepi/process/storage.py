@@ -46,6 +46,8 @@ class Storage:
 
     # READ / WRITE JSON
     def write_json(self, file_path, content):
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+
         with open(file_path, "w") as json_file:
             json.dump(content, json_file)
 
