@@ -21,6 +21,7 @@ def run_timelapse(directory, interval=5, runtime=15):
         if i < photos_to_take - 1:
             time.sleep(interval)
 
+    camera.close_camera()
     storage.delete_lockfile("camera_in_use")
     pid.delete_pid()
 
@@ -51,6 +52,7 @@ def stop_timelapse():
         "reason": "manual_termination",
     }
 
+    camera.close_camera
     storage.write_json(termination_log, content)
     storage.delete_lockfile("camera_in_use")
     pid.delete_pid()

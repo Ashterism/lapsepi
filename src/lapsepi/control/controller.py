@@ -21,6 +21,7 @@ def get_photo():
     if directory == None:
         return
     camera.take_image(directory)
+    camera.close_camera()
     storage.delete_lockfile("camera_in_use")
 
 
