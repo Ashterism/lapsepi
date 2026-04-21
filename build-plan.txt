@@ -93,27 +93,26 @@ A simple travel timelapse device that:
 [x] tag release `v0.7`
 
 --------------------------------------------------
-## v0.8 – DOWNLOAD OUTPUT
-[ ] download MP4 via browser
-[ ] commit working download flow
+## v0.7.5 – DOWNLOAD OUTPUT
+[x] download MP4 via browser
+[x] commit working download flow
 
 --------------------------------------------------
-
-## v0.9 – BOOT + RECOVERY
+## v0.8 – BOOT + RECOVERY
 [ ] define boot flow for Pi device startup
-[ ] create startup script / service that runs on boot
-[ ] wait for system to finish booting enough for app startup
+[x] create startup script / service that runs on boot
+[x] wait for system to finish booting enough for app startup
 [ ] launch `python -m lapsepi` automatically on boot
 [ ] confirm app starts reliably after reboot without manual SSH/login
-[ ] on startup, check for stale lockfile / dirty shutdown
-[ ] if dirty shutdown detected, log it clearly
-[ ] clear stale lock / stale pid state so a new session can run
-[ ] confirm interrupted previous run does not block next run
+[x] on startup, check for stale lockfile / dirty shutdown
+[x] if dirty shutdown detected, log it clearly
+[x] clear stale lock / stale pid state so a new session can run
+[x] confirm interrupted previous run does not block next run
 [ ] commit working boot + recovery flow
-[ ] tag release `v0.9`
+[ ] tag release `v0.8`
 
 --------------------------------------------------
-## v0.95 – CONNECTIVITY MODES
+## v0.9 – CONNECTIVITY MODES
 [ ] define default connectivity behaviour on boot
 [ ] decide whether default should be hotspot-first, Wi-Fi-first, or fallback-based
 [ ] confirm there is always a reliable phone-access path when out and about
@@ -123,7 +122,7 @@ A simple travel timelapse device that:
 [ ] keep connectivity logic outside Flask where possible
 [ ] confirm web UI is reachable in both hotspot and Wi-Fi modes
 [ ] commit working connectivity flow
-[ ] tag release `v0.95`
+[ ] tag release `v0.9`
 
 --------------------------------------------------
 ## v0.10 – READY

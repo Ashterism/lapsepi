@@ -10,11 +10,9 @@ camera = Camera()
 storage = Storage()
 
 
-def run_timelapse(directory=None, interval=None, runtime=None):
+def run_timelapse(directory, interval=5, runtime=15):
 
-    directory = Path(sys.argv[1])
-    interval = int(sys.argv[2]) if len(sys.argv) > 2 else (interval or 5)
-    runtime = int(sys.argv[3]) if len(sys.argv) > 3 else (runtime or 15)
+    directory = Path(directory)
 
     photos_to_take = int(runtime / interval)
 
@@ -58,6 +56,11 @@ def stop_timelapse():
     pid.delete_pid()
 
 
+
 if __name__ == "__main__":
-    #   run_timelapse()
-    stop_timelapse()
+    # remember this is run as a subprocess, so need to convert sys.argvs
+    directory = sys.argv[1]
+    interval = int(sys.argv[2])
+    runtime = int(sys.argv[3])
+
+    run_timelapse(directory, interval, runtime)

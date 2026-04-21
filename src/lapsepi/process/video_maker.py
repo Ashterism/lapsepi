@@ -1,3 +1,19 @@
+# This file takes a folder of images from a timelapse session and turn them into an MP4 using ffmpeg.
+#
+# Important bit:
+# We are NOT doing video processing in Python. We are just building a command
+# and asking the system to run ffmpeg (same as if you typed it in Terminal).
+#
+# Flow is basically:
+# 1. Get ordered list of images for a session
+# 2. Write them into a temporary "file_list.txt" (format ffmpeg expects)
+# 3. Build an ffmpeg command
+# 4. Run it via subprocess.run()
+# 5. Clean up temp file
+#
+# So: Python = orchestration
+#     ffmpeg = actual video creation
+
 
 from pathlib import Path
 import subprocess
