@@ -110,7 +110,7 @@ def gallery():
 @app.route("/create_video", methods=["POST"])
 def create_video():
     session_path = request.form.get("session")
-    fps = request.form.get("fps")
+    fps = int(request.form.get("fps"))
 
     get_timelapse_video(session_path, fps)
 

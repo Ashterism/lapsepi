@@ -1,21 +1,12 @@
-# This file takes a folder of images from a timelapse session and turn them into an MP4 using ffmpeg.
+# This file takes a folder of images from a timelapse session and turns them into an MP4 using ffmpeg.
 #
-# Important bit:
-# We are NOT doing video processing in Python. We are just building a command
-# and asking the system to run ffmpeg (same as if you typed it in Terminal).
-#
-# Flow is basically:
-# 1. Get ordered list of images for a session
-# 2. Write them into a temporary "file_list.txt" (format ffmpeg expects)
-# 3. Build an ffmpeg command
-# 4. Run it via subprocess.run()
-# 5. Clean up temp file
-#
-# So: Python = orchestration
-#     ffmpeg = actual video creation
+# Python does the orchestration:
+# 1. Get the ordered list of images for a session
+# 2. Write them into a temporary concat file ffmpeg can read
+# 3. Run ffmpeg via subprocess
+# 4. Validate the output file
+# 5. Clean up the temp file
 
-
-from pathlib import Path
 import subprocess
 
 from .storage import Storage
@@ -32,45 +23,67 @@ def create_timelapse_video(session_path, fps=30):
     if not session_dir.exists() or not session_dir.is_dir():
         return None
 
-    # get ordered images from storage
     media = storage.list_session_media(session_path)
 
     if not media:
         return None
 
-    # create a temporary file list for ffmpeg
+    output_path = session_dir / f"timelapse_{fps}.mp4"
     file_list_path = session_dir / "file_list.txt"
 
-    with open(file_list_path, "w") as f:
-        for item in media:
-            # ffmpeg expects paths relative to working dir or absolute
-            img_path = storage.data_dir / item["path"]
-            f.write(f"file '{img_path}'\n")
-
-    output_path = session_dir / f"timelapse_{fps}.mp4"
-
-    command = [
-        "ffmpeg",
-        "-y",
-        "-f",
-        "concat",
-        "-safe",
-        "0",
-        "-i",
-        str(file_list_path),
-        "-vf",
-        f"fps={fps}",
-        "-pix_fmt",
-        "yuv420p",
-        str(output_path),
-    ]
+    frame_duration = 1 / fps
 
     try:
-        subprocess.run(command, check=True)
-    except subprocess.CalledProcessError:
-        return None
+        with open(file_list_path, "w", encoding="utf-8") as f:
+            for item in media:
+                img_path = storage.data_dir / item["path"]
+                f.write(f"file '{img_path}'\n")
+                f.write(f"duration {frame_duration}\n")
+
+            # Repeat the last frame so ffmpeg applies the final duration.
+            last_img_path = storage.data_dir / media[-1]["path"]
+            f.write(f"file '{last_img_path}'\n")
+
+        command = [
+            "ffmpeg",
+            "-y",
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            str(file_list_path),
+            "-vsync",
+            "vfr",
+            "-pix_fmt",
+            "yuv420p",
+            str(output_path),
+        ]
+
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+        )
+
+        if result.returncode != 0:
+            print("ffmpeg failed while creating timelapse video")
+            print("command:", " ".join(command))
+            print("stderr:", result.stderr)
+            if output_path.exists():
+                output_path.unlink()
+            return None
+
+        if not output_path.exists() or output_path.stat().st_size <= 1024:
+            print("ffmpeg did not create a valid output file")
+            print("command:", " ".join(command))
+            print("stderr:", result.stderr)
+            if output_path.exists():
+                output_path.unlink()
+            return None
+
+        return str(output_path)
+
     finally:
         if file_list_path.exists():
             file_list_path.unlink()
-
-    return str(output_path)

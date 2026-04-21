@@ -108,18 +108,17 @@
                         </select>
 
                         <select name="fps" class="select-control" id="fps-select" aria-label="Frames per second">
-                            <option selected disabled value="">FPS ↓</option>
-                            <option value="24">24</option>
+                            <option value="24" selected>24 (cinematic)</option>
                             <option value="30">30</option>
                         </select>
                     </div>
 
-                    <p class="estimate-text">Estimated runtime: 1m: 26sec</p>
+                    <p class="estimate-text" id="video-estimate-text">Estimated runtime: -</p>
                 </div>
             </section>
 
             <section>
-                <button class="button" 
+                <button id="create-video-button" class="button"
                     type="submit">Create timelapse video
                 </button>
             </section>
@@ -142,6 +141,11 @@
     const previewVideo = document.getElementById("preview-video");
     const timelapseVideoData = document.getElementById("timelapse-video-data");
     const downloadVideoLink = document.getElementById("download-video-link");
+    const createVideoForm = document.getElementById("create-video-form");
+    const createVideoButton = document.getElementById("create-video-button");
+    const createSessionSelect = document.getElementById("create-session-select");
+    const fpsSelect = document.getElementById("fps-select");
+    const videoEstimateText = document.getElementById("video-estimate-text");
 
     let sessionMedia = [];
     let timelapseVideos = [];
@@ -162,20 +166,18 @@
     }
 
     function updateVideoEstimate() {
-        const fpsSelect = document.getElementById("fps-select");
-        const estimateText = document.querySelector(".estimate-text");
-
-        if (!fpsSelect || !estimateText || !sessionMedia.length) {
+        if (!fpsSelect || !videoEstimateText) {
             return;
         }
 
         const fps = Number(fpsSelect.value);
-        if (!fps) {
-            estimateText.textContent = "Estimated runtime: -";
+        const frames = sessionMedia.length;
+
+        if (!fps || !frames) {
+            videoEstimateText.textContent = "Estimated runtime: -";
             return;
         }
 
-        const frames = sessionMedia.length;
         const seconds = Math.max(1, Math.floor(frames / fps));
 
         let formatted;
@@ -187,7 +189,7 @@
             formatted = secs === 0 ? `${mins}m` : `${mins}m ${secs}s`;
         }
 
-        estimateText.textContent = `Estimated runtime: ~${formatted}`;
+        videoEstimateText.textContent = `Estimated runtime: ~${formatted}`;
     }
 
     function updateGalleryImage(index) {
@@ -279,9 +281,19 @@
         updateGalleryVideo();
     }
 
-    const fpsSelect = document.getElementById("fps-select");
     if (fpsSelect) {
         fpsSelect.addEventListener("change", updateVideoEstimate);
+    }
+
+    if (createSessionSelect) {
+        createSessionSelect.addEventListener("change", updateVideoEstimate);
+    }
+
+    if (createVideoForm && createVideoButton) {
+        createVideoForm.addEventListener("submit", function () {
+            createVideoButton.disabled = true;
+            createVideoButton.classList.add("button-running");
+        });
     }
 
     updateVideoEstimate();

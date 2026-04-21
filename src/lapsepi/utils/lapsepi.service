@@ -4,6 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
+User=ash
 RemainAfterExit=no
 WorkingDirectory=/home/ash/lapsepi
 ExecStart=/home/ash/lapsepi/.venv/bin/python3 -m lapsepi

@@ -103,7 +103,15 @@ WorkingDirectory=/home/ash/lapsepi
 ExecStart=/home/ash/lapsepi/.venv/bin/python3 -m lapsepi
 ```
 
-If your username or install path is different, update those paths before installing the service.
+You should also explicitly set the user the service runs as, so files are created with the correct permissions:
+
+```ini
+User=ash
+```
+
+Make sure this matches your actual username on the Pi. If your username is different, update both the paths and the `User` value accordingly.
+
+If your username or install path is different, update the paths and the `User` value before installing the service.
 
 Then copy it into place:
 
@@ -123,6 +131,17 @@ Check logs:
 
 ```bash
 journalctl -u lapsepi.service -f
+```
+
+---
+
+## Optional: SSH access
+
+If you want to access your Pi remotely, enable SSH:
+
+```bash
+sudo systemctl enable ssh
+sudo systemctl start ssh
 ```
 
 ---
