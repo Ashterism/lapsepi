@@ -146,6 +146,26 @@ sudo systemctl start ssh
 
 ---
 
+## Optional: Auto-activate virtual environment on SSH
+
+If this is a dedicated Pi and you are working on this project frequently, it can be useful to automatically activate the virtual environment when you SSH in.
+
+Add this to the end of your `~/.bashrc` file:
+
+```bash
+cd ~/lapsepi && source .venv/bin/activate
+```
+
+Then reload it or reconnect:
+
+```bash
+source ~/.bashrc
+```
+
+This means every SSH session drops you straight into the project with the virtual environment active, avoiding the need to manually activate it each time.
+
+---
+
 ## Notes
 
 - If you get `No module named picamera2`, you have not installed `python3-picamera2`
