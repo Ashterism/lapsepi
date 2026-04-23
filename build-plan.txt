@@ -99,28 +99,44 @@ A simple travel timelapse device that:
 
 --------------------------------------------------
 ## v0.8 – BOOT + RECOVERY
-[ ] define boot flow for Pi device startup
+[x] define boot flow for Pi device startup
 [x] create startup script / service that runs on boot
 [x] wait for system to finish booting enough for app startup
-[ ] launch `python -m lapsepi` automatically on boot
-[ ] confirm app starts reliably after reboot without manual SSH/login
+[x] launch `python -m lapsepi` automatically on boot
+[x] confirm app starts reliably after reboot without manual SSH/login
 [x] on startup, check for stale lockfile / dirty shutdown
 [x] if dirty shutdown detected, log it clearly
 [x] clear stale lock / stale pid state so a new session can run
 [x] confirm interrupted previous run does not block next run
-[ ] commit working boot + recovery flow
-[ ] tag release `v0.8`
+[x] commit working boot + recovery flow
+[x] tag release `v0.8`
+
+--------------------------------------------------
+## v0.85 – ADMIN PAGE (PLACEHOLDER)
+[ ] add route for admin page (not linked in nav)
+[ ] create admin template
+[ ] show current connectivity state (placeholder)
+    - "Client mode (connected to WiFi)"
+    - "Access Point mode (broadcasting)"
+[ ] add placeholder toggle control
+    - switch between client and AP modes (no backend yet)
+[ ] add placeholder section for "known WiFi networks"
+    - show empty list or mock data
+    - input field placeholder for adding a network
+[ ] keep all controls non-functional for now
+[ ] commit admin page scaffold
+[ ] tag release `v0.8.5`
 
 --------------------------------------------------
 ## v0.9 – CONNECTIVITY MODES
-[ ] define default connectivity behaviour on boot
-[ ] decide whether default should be hotspot-first, Wi-Fi-first, or fallback-based
-[ ] confirm there is always a reliable phone-access path when out and about
-[ ] support hotspot mode so phone can connect directly to the Pi
-[ ] support known Wi-Fi mode for easier access and maintenance when networks exist
-[ ] define simple behaviour for updates / admin access when Wi-Fi is available
-[ ] keep connectivity logic outside Flask where possible
-[ ] confirm web UI is reachable in both hotspot and Wi-Fi modes
+[ ] implement connectivity state detection (client vs AP)
+[ ] on boot, attempt connection to known WiFi networks
+[ ] if no known network available, start Access Point mode
+[ ] confirm device is reachable in both modes from phone
+[ ] persist known WiFi networks (basic storage)
+[ ] allow switching mode via backend (triggered by admin page)
+[ ] keep switching logic simple (no aggressive auto-switching)
+[ ] confirm stable behaviour across reboot
 [ ] commit working connectivity flow
 [ ] tag release `v0.9`
 
