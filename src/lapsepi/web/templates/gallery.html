@@ -89,9 +89,11 @@
                 {% endif %}
             </div>
 
+            {% if timelapse_videos %}
             <div class="card-body card-body-tight">
                 <p class="status-line"><a id="download-video-link" href="#" download>Download MP4</a></p>
             </div>
+            {% endif %}
         </section>
 
         <form method="post" action="/create_video" id="create-video-form">

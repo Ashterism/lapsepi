@@ -49,21 +49,27 @@ def create_timelapse_video(session_path, fps=30):
             last_img_path = storage.data_dir / media[-1]["path"]
             f.write(f"file '{last_img_path}'\n")
 
-        command = [
-            "ffmpeg",
-            "-y",
-            "-f",
-            "concat",
-            "-safe",
-            "0",
-            "-i",
-            str(file_list_path),
-            "-vsync",
-            "vfr",
-            "-pix_fmt",
-            "yuv420p",
-            str(output_path),
-        ]
+            command = [
+                "ffmpeg",
+                "-y",
+                "-f",
+                "concat",
+                "-safe",
+                "0",
+                "-i",
+                str(file_list_path),
+                "-fps_mode",
+                "vfr",
+                "-c:v", 
+                "libx264",
+                "-vf", 
+                "scale=1280:-2",
+                "-pix_fmt", 
+                "yuv420p",
+                "-movflags", 
+                "+faststart",
+                str(output_path),
+            ]
 
         result = subprocess.run(
             command,
@@ -72,13 +78,12 @@ def create_timelapse_video(session_path, fps=30):
         )
 
         if result.returncode != 0:
-            print("ffmpeg failed while creating timelapse video")
+            print("ffmpeg returned non-zero exit code")
+            print("returncode:", result.returncode)
             print("command:", " ".join(command))
             print("stderr:", result.stderr)
-            if output_path.exists():
-                output_path.unlink()
-            return None
 
+        # Only treat as failure if no valid output file exists
         if not output_path.exists() or output_path.stat().st_size <= 1024:
             print("ffmpeg did not create a valid output file")
             print("command:", " ".join(command))
