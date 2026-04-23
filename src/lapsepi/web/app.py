@@ -45,7 +45,7 @@ def styleguide():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=True, host="0.0.0.0", port=5002)
 
 """
 python -m lapsepi.web.app

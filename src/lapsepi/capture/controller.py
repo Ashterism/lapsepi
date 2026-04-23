@@ -5,33 +5,17 @@ from ..process.storage import Storage
 camera = Camera()
 storage = Storage()
 
+""" not setting the camera run mode?   maybe just do in camera?
+    or in here?
+"""
+
+def take_single_photo():
+    use_camera("single_image")
 
 
-#@ wrapper
-def use_camera():
-    ...
-    # check lockfil
-    # exit if in use
-    # USE CAMERA OR TIMELAPSE
-    # remove lockfile
-
-
-
-def take_photo():
-    ...
-    # set path as one off image path
-    # create session file with relevnt imputs
-    # call camera once with path
-    # update session file
-
-
-def take_timelapse():
-    ...
-    # set path as sessions / images / date-time
-    # create session file with relevnt imputs
-    # call camera once with path
-    # update session file
-
+def run_timelapse():
+    use_camera("timelapse")
+   
 
 """
 Thinking is can be function takes duration to run and interval
