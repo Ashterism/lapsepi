@@ -49,10 +49,15 @@ def home():
     )
 
 
-# Serve images from /data/images
+# Serve media from /data
 @app.route("/data/<path:filename>")
-def serve_image(filename):
-    return send_from_directory(storage.data_dir, filename)
+def serve_media(filename):
+    return send_from_directory(
+        storage.data_dir,
+        filename,
+        mimetype="video/mp4" if filename.endswith(".mp4") else None,
+        conditional=True,
+    )
 
 
 # route to check if camera in use (lockfile check)

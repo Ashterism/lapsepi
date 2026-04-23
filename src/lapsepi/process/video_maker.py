@@ -49,21 +49,25 @@ def create_timelapse_video(session_path, fps=30):
             last_img_path = storage.data_dir / media[-1]["path"]
             f.write(f"file '{last_img_path}'\n")
 
-        command = [
-            "ffmpeg",
-            "-y",
-            "-f",
-            "concat",
-            "-safe",
-            "0",
-            "-i",
-            str(file_list_path),
-            "-vsync",
-            "vfr",
-            "-pix_fmt",
-            "yuv420p",
-            str(output_path),
-        ]
+            command = [
+                "ffmpeg",
+                "-y",
+                "-f",
+                "concat",
+                "-safe",
+                "0",
+                "-i",
+                str(file_list_path),
+                "-vsync",
+                "vfr",
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                "-movflags",
+                "+faststart",
+                str(output_path),
+            ]
 
         result = subprocess.run(
             command,
