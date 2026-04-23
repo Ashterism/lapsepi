@@ -153,8 +153,17 @@ If this is a dedicated Pi and you are working on this project frequently, it can
 Add this to the end of your `~/.bashrc` file:
 
 ```bash
+nano ~/.bashrc
+```
+
+```bash
 cd ~/lapsepi && source .venv/bin/activate
 ```
+
+```bash
+Ctrl + O then Ctrl + X
+```
+to save and exit
 
 Then reload it or reconnect:
 
