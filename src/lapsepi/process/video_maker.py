@@ -58,13 +58,15 @@ def create_timelapse_video(session_path, fps=30):
                 "0",
                 "-i",
                 str(file_list_path),
-                "-vsync",
+                "-fps_mode",
                 "vfr",
-                "-c:v",
+                "-c:v", 
                 "libx264",
-                "-pix_fmt",
+                "-vf", 
+                "scale=1280:-2",
+                "-pix_fmt", 
                 "yuv420p",
-                "-movflags",
+                "-movflags", 
                 "+faststart",
                 str(output_path),
             ]
@@ -76,13 +78,12 @@ def create_timelapse_video(session_path, fps=30):
         )
 
         if result.returncode != 0:
-            print("ffmpeg failed while creating timelapse video")
+            print("ffmpeg returned non-zero exit code")
+            print("returncode:", result.returncode)
             print("command:", " ".join(command))
             print("stderr:", result.stderr)
-            if output_path.exists():
-                output_path.unlink()
-            return None
 
+        # Only treat as failure if no valid output file exists
         if not output_path.exists() or output_path.stat().st_size <= 1024:
             print("ffmpeg did not create a valid output file")
             print("command:", " ".join(command))
