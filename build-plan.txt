@@ -1,4 +1,3 @@
-
 LAPSEPI – BUILD PLAN
 
 END GOAL: v1
@@ -7,9 +6,10 @@ A simple travel timelapse device that:
 - lets me take a photo and see it in a basic web view
 - lets me frame the shot before starting a run
 - stores images cleanly by session
-- turns them into a video
+- lets me review captured sessions in the browser
+- lets me create a video from a chosen session
 - lets me get that video onto my phone
-- (later) has power management baked in 
+- (later) has power management baked in
 
 --------------------------------------------------
 ## v0.0 – SETUP + REUSE
@@ -41,110 +41,201 @@ A simple travel timelapse device that:
 [x] tag release `v0.2`
 
 --------------------------------------------------
-## v0.3 – REAL CAMERA PARITY
-[ ] swap mock capture for real camera capture
-[ ] confirm same basic flow works on Pi
-[ ] save real test photo to correct folder
-[ ] confirm latest image appears in web UI
-[ ] commit working real camera test-shot flow
+## v0.3 – REAL CAMERA + SINGLE IMAGE BASELINE
+[x] connect FE & BE single image UI (image + timestamp display)
+[x] normalise date/time naming across files and folders
+[x] save real test photo to correct folder
+[x] confirm latest image appears in web UI
+[x] commit working real camera + single image UI flow
 [ ] tag release `v0.3`
 
 --------------------------------------------------
-## v0.4 – SESSION LOGIC
-[ ] create new session folder per run
-[ ] store images inside session folder
-[ ] define session naming
-[ ] track whether a session is running
-[ ] stop session cleanly
-[ ] commit working session logic
-[ ] tag release `v0.4`
+## v0.4 – TIMELAPSE CONTROL
+[x] define interval + runtime inputs
+[x] pass timing inputs through controller
+[x] wire timelapse trigger from UI
+[x] run timelapse in subprocess (Popen)
+[x] add PID save/read/kill
+[x] add stop button in UI
+[x] confirm end-to-end timelapse capture works
+[x] add basic terminated run marker (`terminated.json`)
+[x] commit working timelapse control flow
+[x] tag release `v0.4`
 
 --------------------------------------------------
-## v0.5 – TIMELAPSE CAPTURE
-[ ] start repeated capture as a session
-[ ] support fixed interval options
-[ ] support fixed runtime options
-[ ] calculate expected frame count
-[ ] save captured images into active session
-[ ] commit working timelapse capture flow
-[ ] tag release `v0.5`
+## v0.5 – NAVIGATION + PLACEHOLDERS
+[x] keep home page focused on capture / start / stop
+[x] add route for gallery page
+[x] add placeholder templates for gallery page and create-video page
+[x] add links / buttons from home page to those pages
+[x] decide what inputs the gallery and create-video flows need
+[x] commit placeholder page structure
 
 --------------------------------------------------
-## v0.6 – VIDEO OUTPUT
-[ ] integrate ffmpeg
-[ ] generate MP4 from session images
-[ ] use fixed FPS (e.g. 30)
-[ ] save video in session folder
-[ ] keep source images
-[ ] commit working video output
+## v0.6 – GALLERY VIEW
+[x] list session folders from `data/sessions/`
+[x] allow selecting a session folder
+[x] display images from selected session
+[x] show any generated video in that session if present
+[x] keep this as a separate page from the home page
+[x] commit working gallery page
 [ ] tag release `v0.6`
 
 --------------------------------------------------
-## v0.7 – WEB TIMELAPSE CONTROLS
-[ ] add interval dropdown (5s / 10s / 30s)
-[ ] add runtime dropdown (10m / 30m / 3h / 8h)
-[ ] show estimated frames
-[ ] show estimated video length
-[ ] add start / stop timelapse controls
-[ ] commit working timelapse web controls
-[ ] tag release `v0.7`
+## v0.7 – VIDEO OUTPUT
+[x] integrate ffmpeg
+[x] create video from a chosen timelapse session
+[x] use fixed FPS (e.g. 30)
+[x] save video alongside session images
+[x] connect create-video page to chosen session
+[x] confirm video output works end-to-end
+[x] commit working video generation
+[x] tag release `v0.7`
 
 --------------------------------------------------
-## v0.8 – DOWNLOAD OUTPUT
-[ ] download MP4 via browser
-[ ] list sessions (basic)
-[ ] optionally download images
-[ ] commit working download flow
+## v0.7.5 – DOWNLOAD OUTPUT
+[x] download MP4 via browser
+[x] commit working download flow
+
+--------------------------------------------------
+## v0.8 – BOOT + RECOVERY
+[ ] define boot flow for Pi device startup
+[x] create startup script / service that runs on boot
+[x] wait for system to finish booting enough for app startup
+[ ] launch `python -m lapsepi` automatically on boot
+[ ] confirm app starts reliably after reboot without manual SSH/login
+[x] on startup, check for stale lockfile / dirty shutdown
+[x] if dirty shutdown detected, log it clearly
+[x] clear stale lock / stale pid state so a new session can run
+[x] confirm interrupted previous run does not block next run
+[ ] commit working boot + recovery flow
 [ ] tag release `v0.8`
 
 --------------------------------------------------
-## v1 – READY
+## v0.9 – CONNECTIVITY MODES
+[ ] define default connectivity behaviour on boot
+[ ] decide whether default should be hotspot-first, Wi-Fi-first, or fallback-based
+[ ] confirm there is always a reliable phone-access path when out and about
+[ ] support hotspot mode so phone can connect directly to the Pi
+[ ] support known Wi-Fi mode for easier access and maintenance when networks exist
+[ ] define simple behaviour for updates / admin access when Wi-Fi is available
+[ ] keep connectivity logic outside Flask where possible
+[ ] confirm web UI is reachable in both hotspot and Wi-Fi modes
+[ ] commit working connectivity flow
+[ ] tag release `v0.9`
+
+--------------------------------------------------
+## v0.10 – READY
 [ ] use it for a real timelapse (travel / window / outdoors)
 [ ] produce a usable video
 [ ] retrieve video via phone successfully
-[ ] commit v1.0
+[ ] confirm real-world access flow works without needing a laptop
+[ ] commit v0.10
+[ ] tag release `v0.10`
+
+--------------------------------------------------
+## v1 – PI VALIDATION
+[ ] confirm same flow works on Pi hardware
+[ ] confirm test photo works on Pi
+[ ] confirm timelapse works on Pi
+[ ] confirm video generation works on Pi
+[ ] confirm basic browser access from phone on Pi
+[ ] confirm reboot returns device to usable state
+[ ] run at least one real unattended timelapse on Pi
+[ ] retrieve usable video via phone successfully
+[ ] commit working Pi validation
 [ ] tag release `v1.0`
 
 --------------------------------------------------
-## LATER / NOT V1
-[ ] add physical button / status light
-[ ] add wifi on / off control
-[ ] improve status / error handling
+## v1.1 – V1 MVP POLISH
+[ ] add a simple "timelapse state" / "last run" line to the UI
+[ ] timelapse settings don't need to show when one running
+[ ] show whether the last run completed or was terminated
+[ ] keep session details lightweight; do not build full session management yet
+[ ] make sure controls behave sensibly while a timelapse is running
+[ ] hide or disable create-video controls while a timelapse is running
+[ ] make gallery / video selection states sensible when no media exists
+[ ] show basic success / failure feedback after video creation
+[ ] decide whether selected image download is needed now or can wait
+[ ] optionally download selected images / whole session later
+[ ] commit MVP polish
+[ ] tag release `v0.8`
+
+--------------------------------------------------
+## V2 / LATER
+[ ] proper session details / session state model
+[ ] richer status / error handling
+[ ] add wifi on / off control in the UI
+[ ] add clearer visibility of current connectivity mode in the UI
+[ ] add smarter switching rules between hotspot and Wi-Fi if needed
 [ ] tidy archive once core structure is settled
+
+--------------------------------------------------
+## V4 / HARDWARE CONTROLS – LATER
+[ ] add status LED
+[ ] add safe shutdown / off button
+[ ] define button / LED behaviour clearly
+[ ] confirm safe shutdown reduces dirty close risk
+
+--------------------------------------------------
+## CURRENT SHAPE / NOTES
+- Home page is for taking a test photo, starting a timelapse, stopping a timelapse, and checking simple current status.
+- Gallery should be its own page.
+- Create-video should be its own page.
+- Full session details can wait until V2.
+- This needs to behave like a small appliance, not just a Python app.
+- Boot, dirty shutdown recovery, and reliable restart are part of getting to v1.
+- A stale lockfile must never leave the device unusable after power loss.
+- Phone access must still work when there is no external Wi-Fi available.
+- Known Wi-Fi is useful for updates, admin, and easier access when networks exist.
+- Connectivity should be handled simply and robustly; clever switching can come later.
+- Hardware controls like LED and off button can come later, once software recovery is solid.
 
 --------------------------------------------------
 ## TARGET FILE TREE
 lapsepi/
 ├── archive/
 ├── data/
+│   ├── images/
+│   ├── meta/
+│   │   └── last_image_taken.json
 │   ├── sessions/
-│   ├── temp/
-│   └── mock/
+│   │   └── YYYY-MM-DD/
+│   │       └── HH-MM-SS/
+│   │           ├── img_*.jpg
+│   │           ├── terminated.json
+│   │           └── timelapse.mp4
+│   └── test_img/
 ├── src/
 │   └── lapsepi/
 │       ├── __init__.py
-│       ├── config.py
+│       ├── __main__.py
 │       ├── capture/
 │       │   ├── camera.py
 │       │   └── timelapse.py
+│       ├── control/
+│       │   └── controller.py
 │       ├── process/
-│       │   ├── session.py
-│       │   ├── storage.py
-│       │   ├── timing.py
-│       │   └── video.py
+│       │   ├── last_image.py
+│       │   ├── pid_manager.py
+│       │   └── storage.py
 │       ├── web/
 │       │   ├── app.py
 │       │   ├── templates/
-│       │   │   └── index.html
+│       │   │   ├── index.html
+│       │   │   ├── gallery.html
+│       │   │   ├── create_video.html
+│       │   │   └── styleguide.html
 │       │   └── static/
+│       │       ├── imgs/
+│       │       │   └── no_image.png
 │       │       └── main.css
 │       ├── mocks/
-│       │   └── mock_camera.py
+│       │   └── mock_file_maker.py
 │       └── utils/
-│           └── logging_config.py
+│           ├── clear_images.py
+│           └── environment_detector.py
 ├── tests/
-│   ├── fixtures/
-│   └── test_camera.py
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
