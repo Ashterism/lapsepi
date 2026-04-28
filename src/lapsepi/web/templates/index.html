@@ -33,20 +33,48 @@
             </div>
         </section>
 
+        <section class="card image-card">
+            <div class="card-body card-body-tight">
+                <h2 class="section-title">Last image</h2>
+                <p class="image-label">Taken: {{ taken_time }}</p>
+            </div>
+            <div class="preview-frame preview-frame-overlay">
+                <img id="last-image-preview" src="{{ image_path }}" class="preview-image" alt="Last captured image">
+                <button id="open-lightbox-button" class="overlay-button" type="button" aria-label="View full screen">
+                    ⤢
+                </button>
+            </div>
+        </section>
+
+        <div id="image-lightbox" class="image-lightbox" hidden>
+            <button id="lightbox-close" class="lightbox-close" type="button" aria-label="Close image preview">×</button>
+            <img id="lightbox-image" class="lightbox-image" src="" alt="Full size preview">
+        </div>
+
         <section>
             <form method="post" action="/take_photo">
                 <button class="button{% if is_running %} button-disabled{% endif %}" type="submit" {% if is_running %}disabled{% endif %}>Take test photo</button>
             </form>
         </section>
 
-        <section class="card image-card">
-            <div class="card-body card-body-tight">
-                <h2 class="section-title">Last image</h2>
-                <p class="image-label">Taken: {{ taken_time }}</p>
-            </div>
-            <div class="preview-frame">
-                <img src="{{ image_path }}" class="preview-image" alt="Last captured image">
-            </div>
+        <section class="card">
+            <form method="post" action="/camera_settings">
+                <div class="card-body settings-card-body">
+                    <h2 class="section-title">Image settings</h2>
+
+                    <div class="controls-stack">
+
+                        <select name="resolution" class="select-control" id="camera-resolution-select" aria-label="Camera resolution">
+                            <option value="1920x1080" {% if camera_settings.resolution == "1920x1080" %}selected{% endif %}>1920 x 1080</option>
+                            <option value="2304x1296" {% if camera_settings.resolution == "2304x1296" %}selected{% endif %}>2304 x 1296 (default)</option>
+                            <option value="4608x2592" {% if camera_settings.resolution == "4608x2592" %}selected{% endif %}>4608 x 2592</option>
+                        </select>
+                    </div>
+
+
+                    <p class="estimate-text">More camera controls will be added here.</p>
+                </div>
+            </form>
         </section>
 
         <form method="post" action="/take_timelapse" id="timelapse-form">
@@ -128,6 +156,48 @@
         const runtimeSelect = document.getElementById("runtime-select");
         const estimatedFrames = document.getElementById("estimated-frames");
         const estimatedLength = document.getElementById("estimated-length");
+        const cameraSettingsForm = document.querySelector('form[action="/camera_settings"]');
+        const cameraResolutionSelect = document.getElementById("camera-resolution-select");
+
+        const lastImagePreview = document.getElementById("last-image-preview");
+        const imageLightbox = document.getElementById("image-lightbox");
+        const lightboxImage = document.getElementById("lightbox-image");
+        const lightboxClose = document.getElementById("lightbox-close");
+        const openLightboxButton = document.getElementById("open-lightbox-button");
+
+        if (openLightboxButton && imageLightbox && lightboxImage && lastImagePreview) {
+            openLightboxButton.addEventListener("click", function () {
+                lightboxImage.src = lastImagePreview.src;
+                imageLightbox.hidden = false;
+            });
+        }
+
+        if (lightboxClose) {
+            lightboxClose.addEventListener("click", closeLightbox);
+        }
+
+        if (imageLightbox) {
+            imageLightbox.addEventListener("click", function (event) {
+                if (event.target === imageLightbox) {
+                    closeLightbox();
+                }
+            });
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeLightbox();
+            }
+        });
+
+        function closeLightbox() {
+            if (!imageLightbox || !lightboxImage) {
+                return;
+            }
+
+            imageLightbox.hidden = true;
+            lightboxImage.src = "";
+        }
 
         function formatVideoLength(seconds) {
             if (seconds < 60) {
@@ -174,6 +244,19 @@
         }
 
         updateEstimate();
+
+        if (cameraSettingsForm && cameraResolutionSelect) {
+            cameraResolutionSelect.addEventListener("change", async function () {
+                try {
+                    await fetch(cameraSettingsForm.action, {
+                        method: "POST",
+                        body: new FormData(cameraSettingsForm),
+                    });
+                } catch (error) {
+                    console.error("Camera settings save failed", error);
+                }
+            });
+        }
 
         if (timelapseForm && timelapseButton) {
             timelapseForm.addEventListener("submit", function () {

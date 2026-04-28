@@ -7,10 +7,26 @@ from flask import (
     request,
 )
 
-from ..control.controller import get_photo, get_timelapse, get_timelapse_stopped, get_timelapse_video
+from ..control.controller import (
+    get_photo,
+    get_timelapse,
+    get_timelapse_stopped,
+    get_timelapse_video,
+    get_camera_options,
+    get_camera_settings,
+    update_camera_settings,
+    get_network_options,
+    get_network_settings,
+    get_current_network_mode,
+    update_network_settings,
+)
+
 from ..process.storage import Storage
+from ..process.network_man import NetworkManager
+
 
 storage = Storage()
+network_manager = NetworkManager()
 
 app = Flask(__name__)
 
@@ -40,19 +56,28 @@ def home():
                     taken_time = dt.strftime("%y/%m/%d %H:%M:%S")
 
     is_running = storage.check_lockfile("camera_in_use")
+    camera_options = get_camera_options()
+    camera_settings = get_camera_settings()
 
     return render_template(
         "index.html",
         image_path=image_path,
         taken_time=taken_time,
         is_running=is_running,
+        camera_options=camera_options,
+        camera_settings=camera_settings,
     )
 
 
-# Serve images from /data/images
+# Serve media from /data
 @app.route("/data/<path:filename>")
-def serve_image(filename):
-    return send_from_directory(storage.data_dir, filename)
+def serve_media(filename):
+    return send_from_directory(
+        storage.data_dir,
+        filename,
+        mimetype="video/mp4" if filename.endswith(".mp4") else None,
+        conditional=True,
+    )
 
 
 # route to check if camera in use (lockfile check)
@@ -77,6 +102,18 @@ def take_photo():
     return redirect("/")
 
 
+@app.route("/camera_settings", methods=["POST"])
+def camera_settings():
+    update_camera_settings(request.form)
+    return redirect("/")
+
+
+@app.route("/network_settings", methods=["POST"])
+def network_settings():
+    update_network_settings(request.form)
+    return redirect("/admin")
+
+
 # route to call get timelapse (which runs in own process)
 @app.route("/take_timelapse", methods=["POST"])
 def take_timelapse():
@@ -92,6 +129,35 @@ def take_timelapse():
 def stop_timelapse():
     get_timelapse_stopped()
     return redirect("/")
+
+@app.route("/admin")
+def admin():
+    networks = network_manager.get_saved_wifi_networks()
+    network_options = get_network_options()
+    network_settings = get_network_settings()
+    current_network_mode = get_current_network_mode()
+
+    target_network_mode = network_settings.get("target_mode", "hotspot")
+    current_network_mode_known = current_network_mode != "unknown"
+    current_network_mode_label = network_options["modes"].get(
+        current_network_mode,
+        "Unable to detect in this environment",
+    )
+    target_network_mode_label = network_options["modes"].get(target_network_mode, target_network_mode)
+    network_mode_will_change = current_network_mode_known and current_network_mode != target_network_mode
+
+    return render_template(
+        "admin.html",
+        networks=networks,
+        network_options=network_options,
+        network_settings=network_settings,
+        current_network_mode=current_network_mode,
+        current_network_mode_known=current_network_mode_known,
+        current_network_mode_label=current_network_mode_label,
+        target_network_mode=target_network_mode,
+        target_network_mode_label=target_network_mode_label,
+        network_mode_will_change=network_mode_will_change,
+    )
 
 
 @app.route("/gallery")

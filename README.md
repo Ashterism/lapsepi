@@ -2,7 +2,7 @@
 
 Simple timelapse camera app for Raspberry Pi.
 
-This is currently focused on getting something that just works, rather than being overly polished.
+This project prioritises reliability and simplicity over polish.
 
 ---
 
@@ -46,9 +46,40 @@ sudo apt install python3 python3-venv python3-pip git ffmpeg python3-picamera2
 
 ---
 
+## Optional: Hotspot mode (Access Point)
+
+To allow direct connection without WiFi, set up a hotspot:
+
+```bash
+sudo nmcli connection add type wifi ifname wlan0 con-name potshot-hotspot autoconnect yes ssid potshot
+
+sudo nmcli connection modify potshot-hotspot \
+  802-11-wireless.mode ap \
+  802-11-wireless.band bg \
+  ipv4.method shared \
+  wifi-sec.key-mgmt wpa-psk \
+  wifi-sec.psk "badgerCaptain10"
+```
+
+Disable autoconnect on other networks:
+
+```bash
+nmcli connection modify "<connection-name>" connection.autoconnect no
+```
+
+---
+
 ## Installation (Pi)
 
 This assumes a Raspberry Pi running a Debian-based OS.
+
+## Camera
+
+This project expects a Raspberry Pi camera using `picamera2`.
+
+Ensure:
+- the camera is enabled in `raspi-config`
+- `python3-picamera2` is installed
 
 ### 1. Clone the repo
 
@@ -82,6 +113,26 @@ Then open it in a browser using the Pi's IP address, e.g.:
 
 ```text
 http://<pi-ip>:5002
+```
+
+### Accessing the app
+
+If running in hotspot mode, connect to:
+
+- SSID: `potshot`
+- then open:
+
+```
+http://192.168.4.1:5002
+```
+
+If running on a local network, you can access via:
+
+- http://<pi-ip>:5002
+- or (recommended, if available):
+
+```
+http://potshot.local:5002
 ```
 
 ### 5. Set up auto-start (systemd)
@@ -143,6 +194,26 @@ If you want to access your Pi remotely, enable SSH:
 sudo systemctl enable ssh
 sudo systemctl start ssh
 ```
+
+---
+
+## Data storage
+
+Images, sessions, and metadata are stored under:
+
+```
+data/
+  images/
+  sessions/
+  meta/
+```
+
+Do not manually edit files in `meta/` unless you know what you are doing.
+
+## Behaviour notes
+
+- Changing network mode may disconnect your current session
+- Video generation on lower-powered devices can be slow
 
 ---
 

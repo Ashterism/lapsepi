@@ -99,24 +99,24 @@ A simple travel timelapse device that:
 
 --------------------------------------------------
 ## v0.8 – BOOT + RECOVERY
-[ ] define boot flow for Pi device startup
+[x] define boot flow for Pi device startup
 [x] create startup script / service that runs on boot
 [x] wait for system to finish booting enough for app startup
-[ ] launch `python -m lapsepi` automatically on boot
-[ ] confirm app starts reliably after reboot without manual SSH/login
+[x] launch `python -m lapsepi` automatically on boot
+[x] confirm app starts reliably after reboot without manual SSH/login
 [x] on startup, check for stale lockfile / dirty shutdown
 [x] if dirty shutdown detected, log it clearly
 [x] clear stale lock / stale pid state so a new session can run
 [x] confirm interrupted previous run does not block next run
-[ ] commit working boot + recovery flow
-[ ] tag release `v0.8`
+[x] commit working boot + recovery flow
+[x] tag release `v0.8`
 
 --------------------------------------------------
 ## v0.9 – CONNECTIVITY MODES
-[ ] define default connectivity behaviour on boot
+[x] define default connectivity behaviour on boot
 [ ] decide whether default should be hotspot-first, Wi-Fi-first, or fallback-based
 [ ] confirm there is always a reliable phone-access path when out and about
-[ ] support hotspot mode so phone can connect directly to the Pi
+[x] support hotspot mode so phone can connect directly to the Pi
 [ ] support known Wi-Fi mode for easier access and maintenance when networks exist
 [ ] define simple behaviour for updates / admin access when Wi-Fi is available
 [ ] keep connectivity logic outside Flask where possible
@@ -158,17 +158,52 @@ A simple travel timelapse device that:
 [ ] show basic success / failure feedback after video creation
 [ ] decide whether selected image download is needed now or can wait
 [ ] optionally download selected images / whole session later
+
 [ ] commit MVP polish
-[ ] tag release `v0.8`
+[ ] tag release `v1.1s`
+
+--------------------------------------------------
+## v1.2 – CAMERA SETTINGS
+[ ] move "Take test photo" button beneath the last image preview
+[ ] add camera settings card beneath the test photo button
+[ ] make camera settings card collapsible
+[ ] add preset dropdown with options:
+    - Default (standard daytime)
+    - Sunset
+    - Nightscape
+    - Astro
+    - Custom
+[ ] add placeholder controls for camera settings:
+    - resolution
+    - exposure mode
+    - shutter speed
+    - ISO / gain
+    - white balance
+    - focus mode
+[ ] add placeholder buttons:
+    - save camera settings
+    - revert to defaults
+[ ] keep settings controls non-functional initially
+[ ] persist selected camera settings in `data/meta/camera_settings.json`
+[ ] implement resolution setting first
+[ ] confirm test photos use selected resolution
+[ ] confirm timelapse captures use selected resolution
+[ ] commit camera settings placeholder flow
+[ ] tag release `v1.2`
 
 --------------------------------------------------
 ## V2 / LATER
 [ ] proper session details / session state model
 [ ] richer status / error handling
+
 [ ] add wifi on / off control in the UI
 [ ] add clearer visibility of current connectivity mode in the UI
 [ ] add smarter switching rules between hotspot and Wi-Fi if needed
 [ ] tidy archive once core structure is settled
+[ ] add richer camera preset behaviour for sunset / nightscape / astro
+[ ] decide whether video generation should use source image resolution, preview resolution, or explicit export settings
+[ ] add optional preview / full-quality video export modes
+[ ] add whole-session download / zip export for processing later on laptop
 
 --------------------------------------------------
 ## V4 / HARDWARE CONTROLS – LATER
@@ -189,7 +224,13 @@ A simple travel timelapse device that:
 - Phone access must still work when there is no external Wi-Fi available.
 - Known Wi-Fi is useful for updates, admin, and easier access when networks exist.
 - Connectivity should be handled simply and robustly; clever switching can come later.
+
 - Hardware controls like LED and off button can come later, once software recovery is solid.
+- Camera settings should start as UI placeholders, then resolution should be implemented first.
+- Presets should be practical shooting modes, not technical profiles: Default (standard daytime), Sunset, Nightscape, Astro, and Custom.
+- Editing camera settings manually should eventually switch the preset to Custom.
+- Timelapse video generation should ideally detect source image resolution and create an appropriate preview output, unless an explicit export setting is chosen.
+- Full-quality processing can happen later via laptop / NAS / remote render; the Pi should prioritise reliable preview output.
 
 --------------------------------------------------
 ## TARGET FILE TREE
