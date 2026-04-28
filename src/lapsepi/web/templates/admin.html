@@ -57,11 +57,16 @@
             <div class="card-body settings-card-body">
                 <h2 class="section-title">Known Wi-Fi networks</h2>
                 {% if networks %}
-                    <ul>
-                        {% for network in networks %}
-                            <li>{{ network }}</li>
-                        {% endfor %}
-                    </ul>
+                    <div class="controls-stack">
+                        <select class="select-control" id="saved-network-select" aria-label="Known Wi-Fi networks">
+                            {% for network in networks %}
+                                <option value="{{ loop.index0 }}">{{ network.ssid }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <p class="status-line">SSID: <span id="saved-network-ssid">{{ networks[0].ssid }}</span></p>
+                    <p class="status-line">Connection name: <span id="saved-network-connection">{{ networks[0].connection_name }}</span></p>
                 {% else %}
                     <p class="status-line">No saved networks loaded yet.</p>
                 {% endif %}
@@ -69,10 +74,27 @@
             </div>
         </section>
     </main>
+<script id="saved-network-data" type="application/json">
+    {{ networks | tojson }}
+</script>
 <script>
     const networkSettingsForm = document.querySelector('form[action="/network_settings"]');
     const networkModeSelect = document.getElementById("network-mode-select");
     const networkChangeStatus = document.getElementById("network-change-status");
+    const savedNetworkSelect = document.getElementById("saved-network-select");
+    const savedNetworkSsid = document.getElementById("saved-network-ssid");
+    const savedNetworkConnection = document.getElementById("saved-network-connection");
+    const savedNetworkData = document.getElementById("saved-network-data");
+
+    let savedNetworks = [];
+
+    if (savedNetworkData) {
+        try {
+            savedNetworks = JSON.parse(savedNetworkData.textContent);
+        } catch (error) {
+            savedNetworks = [];
+        }
+    }
 
     function updateNetworkChangeStatus() {
         if (!networkModeSelect || !networkChangeStatus) {
@@ -111,6 +133,19 @@
             } catch (error) {
                 console.error("Network settings save failed", error);
             }
+        });
+    }
+
+    if (savedNetworkSelect && savedNetworkSsid && savedNetworkConnection && savedNetworks.length) {
+        savedNetworkSelect.addEventListener("change", function () {
+            const selectedNetwork = savedNetworks[Number(savedNetworkSelect.value)];
+
+            if (!selectedNetwork) {
+                return;
+            }
+
+            savedNetworkSsid.textContent = selectedNetwork.ssid;
+            savedNetworkConnection.textContent = selectedNetwork.connection_name;
         });
     }
 </script>

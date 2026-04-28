@@ -116,19 +116,26 @@ class NetworkManager():
     def get_saved_wifi_networks(self):
         try:
             result = subprocess.run(
-                ["nmcli", "-t", "-f", "NAME", "connection", "show"],
+                ["nmcli", "-t", "-f", "NAME,802-11-wireless.ssid", "connection", "show"],
                 capture_output=True,
                 text=True,
             )
 
             networks = []
 
-            for name in result.stdout.splitlines():
-                if name.startswith("netplan-wlan"):
-                    networks.append(name)
+            for line in result.stdout.splitlines():
+                parts = line.split(":")
+                if len(parts) == 2:
+                    connection_name, ssid = parts
+
+                    if ssid:  # only include WiFi connections
+                        networks.append({
+                            "ssid": ssid,
+                            "connection_name": connection_name,
+                        })
 
             return networks
 
         except FileNotFoundError:
             # running on non-Pi (e.g. Mac)
-            return ["(nmcli not available)"]
+            return [{"ssid": "(nmcli not available)", "connection_name": ""}]
