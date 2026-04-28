@@ -105,34 +105,52 @@ class NetworkManager():
             saved_networks = self.get_saved_wifi_networks()
 
             for network in saved_networks:
-                if self.connect_to_wifi(network):
+                connection_name = network.get("connection_name")
+                if connection_name and self.connect_to_wifi(connection_name):
                     return True
 
             return self.enable_hotspot()
 
         return self.enable_hotspot()
 
+    def get_wifi_ssid(self, connection_name):
+        try:
+            result = subprocess.run(
+                ["nmcli", "connection", "show", connection_name],
+                capture_output=True,
+                text=True,
+            )
+
+            for line in result.stdout.splitlines():
+                if line.startswith("802-11-wireless.ssid:"):
+                    return line.split(":", 1)[1].strip()
+
+            return connection_name.replace("netplan-wlan0-", "")
+
+        except FileNotFoundError:
+            return connection_name
+
 
     def get_saved_wifi_networks(self):
         try:
             result = subprocess.run(
-                ["nmcli", "-t", "-f", "NAME,802-11-wireless.ssid", "connection", "show"],
+                ["nmcli", "-t", "-f", "NAME", "connection", "show"],
                 capture_output=True,
                 text=True,
             )
 
             networks = []
 
-            for line in result.stdout.splitlines():
-                parts = line.split(":")
-                if len(parts) == 2:
-                    connection_name, ssid = parts
+            for connection_name in result.stdout.splitlines():
+                if not connection_name.startswith("netplan-wlan"):
+                    continue
 
-                    if ssid:  # only include WiFi connections
-                        networks.append({
-                            "ssid": ssid,
-                            "connection_name": connection_name,
-                        })
+                ssid = self.get_wifi_ssid(connection_name)
+
+                networks.append({
+                    "ssid": ssid,
+                    "connection_name": connection_name,
+                })
 
             return networks
 
