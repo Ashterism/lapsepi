@@ -139,6 +139,49 @@ http://potshot.local:5002
 
 The app is designed to run on boot via a systemd service.
 
+#### Network mode service (required for connectivity switching)
+
+Network mode (WiFi vs hotspot) is applied at boot by a separate systemd service.
+
+Create a new service file:
+
+```text
+src/lapsepi/utils/lapsepi-network.service
+```
+
+Example contents:
+
+```ini
+[Unit]
+Description=LapsePi network setup
+Before=lapsepi.service
+After=NetworkManager.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ash/lapsepi
+ExecStart=/home/ash/lapsepi/.venv/bin/python3 -m lapsepi.process.apply_network_mode
+
+[Install]
+WantedBy=multi-user.target
+```
+
+This service runs once at boot (as root) and applies the saved network mode before the main app starts.
+
+Install it:
+
+```bash
+sudo cp src/lapsepi/utils/lapsepi-network.service /etc/systemd/system/lapsepi-network.service
+```
+
+Enable it:
+
+```bash
+sudo systemctl enable lapsepi-network.service
+```
+
+You do not need to manually configure boot order beyond this — the `Before=lapsepi.service` line ensures it runs first.
+
 Open:
 
 ```text
@@ -174,7 +217,9 @@ Enable and start it:
 
 ```bash
 sudo systemctl daemon-reload
+sudo systemctl enable lapsepi-network.service
 sudo systemctl enable lapsepi.service
+sudo systemctl start lapsepi-network.service
 sudo systemctl start lapsepi.service
 ```
 
@@ -211,9 +256,10 @@ data/
 Do not manually edit files in `meta/` unless you know what you are doing.
 
 ## Behaviour notes
-
+ 
 - Changing network mode may disconnect your current session
 - Video generation on lower-powered devices can be slow
+- Network mode changes are applied on reboot
 
 ---
 

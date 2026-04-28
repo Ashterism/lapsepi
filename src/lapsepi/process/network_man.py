@@ -57,17 +57,60 @@ class NetworkManager():
 
     def enable_hotspot(self):
         try:
-            subprocess.run(["nmcli", "connection", "down", "potshot-hotspot"])
-            subprocess.run(["nmcli", "connection", "up", "potshot-hotspot"])
+            subprocess.run(
+                ["nmcli", "connection", "down", "potshot-hotspot"],
+                capture_output=True,
+                text=True,
+            )
+
+            result = subprocess.run(
+                ["nmcli", "connection", "up", "potshot-hotspot"],
+                capture_output=True,
+                text=True,
+            )
+
+            return result.returncode == 0
+
         except FileNotFoundError:
-            return None
+            return False
         
     def connect_to_wifi(self, ssid):
         try:
-            subprocess.run(["nmcli", "connection", "down", "potshot-hotspot"])
-            subprocess.run(["nmcli", "connection", "up", ssid])
+            subprocess.run(
+                ["nmcli", "connection", "down", "potshot-hotspot"],
+                capture_output=True,
+                text=True,
+            )
+
+            result = subprocess.run(
+                ["nmcli", "connection", "up", ssid],
+                capture_output=True,
+                text=True,
+            )
+
+            return result.returncode == 0
+
         except FileNotFoundError:
-            return None
+            return False
+
+
+    def apply_target_mode(self):
+        settings = self.get_network_settings()
+        target_mode = settings.get("target_mode", "hotspot")
+
+        if target_mode == "hotspot":
+            return self.enable_hotspot()
+
+        if target_mode == "auto":
+            saved_networks = self.get_saved_wifi_networks()
+
+            for network in saved_networks:
+                if self.connect_to_wifi(network):
+                    return True
+
+            return self.enable_hotspot()
+
+        return self.enable_hotspot()
 
 
     def get_saved_wifi_networks(self):
