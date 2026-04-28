@@ -37,25 +37,18 @@ class NetworkManager():
     def get_current_network_mode(self):
         try:
             result = subprocess.run(
-                ["nmcli", "-t", "-f", "NAME,TYPE,DEVICE", "connection", "show", "--active"],
+                ["nmcli", "-t", "-f", "NAME", "connection", "show", "--active"],
                 capture_output=True,
                 text=True,
             )
 
-            for line in result.stdout.splitlines():
-                parts = line.split(":")
-                if len(parts) < 2:
-                    continue
-
-                connection_name = parts[0]
-                connection_type = parts[1]
-
-                if connection_name == "potshot-hotspot":
+            for name in result.stdout.splitlines():
+                if "potshot" in name.lower():
                     return "hotspot"
 
-                if connection_type == "wifi":
+                if "wlan" in name.lower() or "wifi" in name.lower():
                     return "auto"
-
+                
             return "unknown"
 
         except FileNotFoundError:
@@ -80,16 +73,15 @@ class NetworkManager():
     def get_saved_wifi_networks(self):
         try:
             result = subprocess.run(
-                ["nmcli", "-t", "-f", "NAME,TYPE", "connection", "show"],
+                ["nmcli", "-t", "-f", "NAME", "connection", "show"],
                 capture_output=True,
                 text=True,
             )
 
             networks = []
 
-            for line in result.stdout.splitlines():
-                name, conn_type = line.split(":")
-                if conn_type == "wifi":
+            for name in result.stdout.splitlines():
+                if name.startswith("netplan-wlan"):
                     networks.append(name)
 
             return networks
