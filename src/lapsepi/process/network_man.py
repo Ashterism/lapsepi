@@ -2,7 +2,7 @@ import subprocess
 from .storage import Storage
 
 
-class NetworkManager():
+class NetworkManager:
     def __init__(self):
         self.storage = Storage()
         self.network_settings = self.storage.meta_dir / "network_settings.json"
@@ -12,13 +12,11 @@ class NetworkManager():
             "hotspot": "Hotspot only",
         }
 
-
     # FOR POPULATING FE OPTIONS
     def get_network_options(self):
         return {
             "modes": self.network_modes,
         }
-
 
     def update_network_settings(self, data):
         settings = {
@@ -27,12 +25,10 @@ class NetworkManager():
 
         self.storage.write_json(self.network_settings, settings)
         return settings
-    
 
     def get_network_settings(self):
         saved = self.storage.read_json(self.network_settings)
         return saved or {"target_mode": "hotspot"}
-
 
     def get_current_network_mode(self):
         try:
@@ -48,12 +44,11 @@ class NetworkManager():
 
                 if "wlan" in name.lower() or "wifi" in name.lower():
                     return "auto"
-                
+
             return "unknown"
 
         except FileNotFoundError:
             return "unknown"
-
 
     def enable_hotspot(self):
         try:
@@ -73,7 +68,7 @@ class NetworkManager():
 
         except FileNotFoundError:
             return False
-        
+
     def connect_to_wifi(self, ssid):
         try:
             subprocess.run(
@@ -92,7 +87,6 @@ class NetworkManager():
 
         except FileNotFoundError:
             return False
-
 
     def apply_target_mode(self):
         settings = self.get_network_settings()
@@ -130,7 +124,6 @@ class NetworkManager():
         except FileNotFoundError:
             return connection_name
 
-
     def get_saved_wifi_networks(self):
         try:
             result = subprocess.run(
@@ -147,10 +140,12 @@ class NetworkManager():
 
                 ssid = self.get_wifi_ssid(connection_name)
 
-                networks.append({
-                    "ssid": ssid,
-                    "connection_name": connection_name,
-                })
+                networks.append(
+                    {
+                        "ssid": ssid,
+                        "connection_name": connection_name,
+                    }
+                )
 
             return networks
 

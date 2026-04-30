@@ -130,6 +130,7 @@ def stop_timelapse():
     get_timelapse_stopped()
     return redirect("/")
 
+
 @app.route("/admin")
 def admin():
     networks = network_manager.get_saved_wifi_networks()
@@ -143,8 +144,12 @@ def admin():
         current_network_mode,
         "Unable to detect in this environment",
     )
-    target_network_mode_label = network_options["modes"].get(target_network_mode, target_network_mode)
-    network_mode_will_change = current_network_mode_known and current_network_mode != target_network_mode
+    target_network_mode_label = network_options["modes"].get(
+        target_network_mode, target_network_mode
+    )
+    network_mode_will_change = (
+        current_network_mode_known and current_network_mode != target_network_mode
+    )
 
     return render_template(
         "admin.html",
@@ -169,13 +174,12 @@ def gallery():
 
     timelapse_videos = storage.list_timelapse_vids()
 
-
     return render_template(
-    "gallery.html",
-    sessions=sessions,
-    selected_session=selected_session,
-    session_media=session_media,
-    timelapse_videos=timelapse_videos,
+        "gallery.html",
+        sessions=sessions,
+        selected_session=selected_session,
+        session_media=session_media,
+        timelapse_videos=timelapse_videos,
     )
 
 
@@ -188,7 +192,7 @@ def create_video():
 
     return redirect(f"/gallery?session={session_path}")
 
-    
+
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
 

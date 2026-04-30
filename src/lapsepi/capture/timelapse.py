@@ -58,7 +58,6 @@ def stop_timelapse():
     pid.delete_pid()
 
 
-
 if __name__ == "__main__":
     # remember this is run as a subprocess, so need to convert sys.argvs
     directory = sys.argv[1]

@@ -94,7 +94,6 @@ class Storage:
         self.clear_images()
         self.clear_sessions()
 
-
     # Make media findable and accessible
 
     def list_sessions(self):
@@ -102,9 +101,9 @@ class Storage:
 
         if not self.session_dir.exists():
             return sessions
-        
+
         # iterate date folders
-        for date_dir in sorted(self.session_dir.iterdir(),reverse=True):
+        for date_dir in sorted(self.session_dir.iterdir(), reverse=True):
             if not date_dir.is_dir():
                 continue
 
@@ -116,17 +115,12 @@ class Storage:
                 # relative path for FE
                 rel_path = time_dir.relative_to(self.data_dir)
 
-
                 # simple display label
                 label = f"{date_dir.name} {time_dir.name.replace('-',':')}"
-                sessions.append({
-                    "path": str(rel_path),
-                    "label": label
-                })
+                sessions.append({"path": str(rel_path), "label": label})
 
         return sessions
 
-        
     def list_session_media(self, session_path):
         media = []
 
@@ -148,13 +142,14 @@ class Storage:
             rel_path = item.relative_to(self.data_dir)
             label = item.stem.replace("img_", "").replace("-", ":")
 
-            media.append({
-                "path": str(rel_path),
-                "label": label,
-            })
+            media.append(
+                {
+                    "path": str(rel_path),
+                    "label": label,
+                }
+            )
 
         return media
-
 
     def list_timelapse_vids(self):
         videos = []
@@ -181,15 +176,14 @@ class Storage:
                     session_rel_path = time_dir.relative_to(self.data_dir)
                     session_label = f"{date_dir.name} {time_dir.name.replace('-', ':')}"
 
-                    videos.append({
-                        "path": str(rel_path),
-                        "label": f"{session_label} - {item.name}",
-                        "session_path": str(session_rel_path),
-                        "session_label": session_label,
-                        "filename": item.name,
-                    })
+                    videos.append(
+                        {
+                            "path": str(rel_path),
+                            "label": f"{session_label} - {item.name}",
+                            "session_path": str(session_rel_path),
+                            "session_label": session_label,
+                            "filename": item.name,
+                        }
+                    )
 
         return videos
-
-
-

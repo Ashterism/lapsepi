@@ -13,7 +13,6 @@ from .process.pid_manager import has_pid, delete_pid
 storage = Storage()
 
 
-
 def check_last_shutdown():
     lockfile_status = None
     pidfile_status = None
@@ -29,9 +28,9 @@ def check_last_shutdown():
     dirty_shutdown = "deleted" in (lockfile_status, pidfile_status)
 
     bootlog = {
-        "dirty_shutdown" : dirty_shutdown,
-        "lockfile_status" : lockfile_status,
-        "pidfile_status" : pidfile_status,
+        "dirty_shutdown": dirty_shutdown,
+        "lockfile_status": lockfile_status,
+        "pidfile_status": pidfile_status,
     }
 
     filepath = storage.meta_dir / "bootlog.json"
@@ -41,11 +40,11 @@ def check_last_shutdown():
 
 def start_flask():
     from lapsepi.web.app import app
+
     app.run(host="0.0.0.0", port=5002)
 
 
-def shutdown_gracefully():
-    ...
+def shutdown_gracefully(): ...
 
 
 def main():

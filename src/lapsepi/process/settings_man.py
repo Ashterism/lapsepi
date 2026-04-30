@@ -1,4 +1,3 @@
-
 from .storage import Storage
 
 
@@ -24,23 +23,20 @@ class SettingsManager:
             "4608x2592": "4608 x 2592",
         }
 
-
     def get_camera_options(self):
         return {
             "presets": self.camera_presets,
             "resolutions": self.camera_resolutions,
             "defaults": self.default_camera_settings,
         }
-    
 
     def get_camera_settings(self):
-        
+
         saved_settings = (
             self.storage.read_json(self.camera_settings_file)
             or self.default_camera_settings
         )
         return saved_settings
-
 
     def update_camera_settings(self, data):
         settings = {

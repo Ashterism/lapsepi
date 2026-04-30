@@ -47,7 +47,6 @@ class Camera:
 
         update_last_image_taken(filepath)
 
-
     def close_camera(self):
         if self.mode == "prod" and self.cam:
             try:
