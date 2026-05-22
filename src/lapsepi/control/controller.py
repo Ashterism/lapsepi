@@ -66,34 +66,25 @@ def get_timelapse_video(session_path, fps):
 
 
 ### MANAGE IMAGE SETTINGS ###
-
-
 def get_camera_options():
     return settings_manager.get_camera_options()
 
-
 def get_camera_settings():
     return settings_manager.get_camera_settings()
-
 
 def update_camera_settings(data):
     return settings_manager.update_camera_settings(data)
 
 
 # NETWORKING CONTROLS
-
-
 def get_network_options():
     return network_manager.get_network_options()
-
 
 def get_network_settings():
     return network_manager.get_network_settings()
 
-
 def get_current_network_mode():
     return network_manager.get_current_network_mode()
-
 
 def update_network_settings(data):
     return network_manager.update_network_settings(data)

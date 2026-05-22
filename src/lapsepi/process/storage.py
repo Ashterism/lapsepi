@@ -13,6 +13,7 @@ class Storage:
         self.session_dir = self.data_dir / "sessions"  # taken images directory
         self.videos_dir = self.data_dir / "videos"  # recorded video directory
         self.meta_dir = self.data_dir / "meta"  # metadata directory
+        self.temp_dir = self.data_dir / "temp" # temp files
 
     # HELPERS
     def create_timestamp(self):
@@ -187,3 +188,35 @@ class Storage:
                     )
 
         return videos
+
+
+    # UTILITIES
+    def zip_folder(self, session_path):
+        self.temp_dir.mkdir(parents=True, exist_ok=True)
+
+        # self.list_sessions strips back path so add back in
+        session_dir = self.data_dir / session_path
+
+        # figure out how to name the zip
+        folder_name = Path(session_path).parent.name
+        time_name = Path(session_path).name
+        filename = f"{folder_name}_{time_name}"
+
+        output_path = self.temp_dir / filename
+
+        # do the zip
+        archive = shutil.make_archive(
+            output_path,
+            "zip",
+            session_dir
+        )
+
+        return archive
+
+
+    def delete_zip(self, filepath):
+        ...
+        # take zip path
+        # call clear directory to clear
+
+

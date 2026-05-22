@@ -25,7 +25,26 @@
 
         <section class="card">
             <div class="card-body settings-card-body">
-                <h2 class="section-title">Timelapse sessions</h2>
+                <div class="function-header-row">
+                    <h2 class="section-title">Timelapse sessions</h2>
+
+                    {% if selected_session %}
+                        <a href="{{ url_for('download_session', session=selected_session) }}"
+                           class="function-icon-button"
+                           aria-label="Download session">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="nav-icon">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M3.75 9v8.25A2.25 2.25 0 0 0 6 19.5h12a2.25 2.25 0 0 0 2.25-2.25V9m-16.5 0V6.75A2.25 2.25 0 0 1 6 4.5h3.879a2.25 2.25 0 0 1 1.591.659l.621.621a2.25 2.25 0 0 0 1.591.659H18a2.25 2.25 0 0 1 2.25 2.25M12 10.5v6m0 0 2.25-2.25M12 16.5l-2.25-2.25" />
+                            </svg>
+                        </a>
+                    {% endif %}
+                </div>
 
                 <form method="get" action="/gallery">
                     <div class="controls-stack">

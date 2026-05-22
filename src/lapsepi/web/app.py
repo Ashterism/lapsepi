@@ -2,6 +2,7 @@ from flask import (
     Flask,
     render_template,
     send_from_directory,
+    send_file,
     redirect,
     jsonify,
     request,
@@ -180,6 +181,18 @@ def gallery():
         selected_session=selected_session,
         session_media=session_media,
         timelapse_videos=timelapse_videos,
+    )
+
+
+@app.route("/download_session")
+def download_session():
+    session_path = request.args.get("session")
+
+    archive = storage.zip_folder(session_path)
+
+    return send_file(
+        archive,
+        as_attachment=True,
     )
 
 
