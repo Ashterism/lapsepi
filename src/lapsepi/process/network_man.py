@@ -152,3 +152,31 @@ class NetworkManager:
         except FileNotFoundError:
             # running on non-Pi (e.g. Mac)
             return [{"ssid": "(nmcli not available)", "connection_name": ""}]
+        
+
+    def forget_wifi_network(self, connection_name):
+        try:
+            result = subprocess.run(
+                ["nmcli", "connection", "delete", connection_name],
+                capture_output=True,
+                text=True,
+            )
+
+            return result.returncode == 0
+
+        except FileNotFoundError:
+            return False
+    
+
+    def add_wifi_network(self, ssid, password):
+        try:
+            result = subprocess.run(
+                ["nmcli", "device", "wifi", "connect", ssid, "password", password],
+                capture_output=True,
+                text=True,
+            )
+
+            return result.returncode == 0
+
+        except FileNotFoundError:
+            return False

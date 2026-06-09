@@ -131,7 +131,7 @@ def stop_timelapse():
     get_timelapse_stopped()
     return redirect("/")
 
-
+# ADMIN PAGE
 @app.route("/admin")
 def admin():
     networks = network_manager.get_saved_wifi_networks()
@@ -165,7 +165,15 @@ def admin():
         network_mode_will_change=network_mode_will_change,
     )
 
+@app.route("/forget_network", methods=["POST"])
+def forget_network():
+    connection_name = request.form.get("connection_name")
 
+    network_manager.forget_wifi_network(connection_name)
+
+    return redirect("/admin")
+
+# GALLERY PAGE
 @app.route("/gallery")
 def gallery():
 

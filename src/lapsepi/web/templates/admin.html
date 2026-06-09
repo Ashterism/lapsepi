@@ -70,7 +70,53 @@
                 {% else %}
                     <p class="status-line">No saved networks loaded yet.</p>
                 {% endif %}
-                <p class="estimate-text">A form for adding or managing known Wi-Fi networks will go here.</p>
+                <form method="post" action="/forget_network">
+                    <input
+                        type="hidden"
+                        name="connection_name"
+                        id="forget-network-connection"
+                        value="{{ networks[0].connection_name if networks else '' }}">
+
+                    <div class="controls-stack controls-stack-tight">
+                        <button type="button" class="button">
+                            Connect to network
+                        </button>
+
+                        <button type="submit" class="button">
+                            Forget network
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-body settings-card-body">
+                <h2 class="section-title">Add Wi-Fi network</h2>
+
+                <div class="controls-stack">
+                    <input
+                        type="text"
+                        class="text-control"
+                        placeholder="SSID"
+                        aria-label="Wi-Fi SSID">
+
+                    <input
+                        type="password"
+                        class="text-control"
+                        id="wifi-password-input"
+                        placeholder="Password"
+                        aria-label="Wi-Fi password">
+
+                    <label class="status-line">
+                        <input type="checkbox" id="show-password-toggle">
+                        Show password
+                    </label>
+
+                    <button type="button" class="button">
+                        Save network
+                    </button>
+                </div>
             </div>
         </section>
     </main>
@@ -85,6 +131,9 @@
     const savedNetworkSsid = document.getElementById("saved-network-ssid");
     const savedNetworkConnection = document.getElementById("saved-network-connection");
     const savedNetworkData = document.getElementById("saved-network-data");
+    const forgetNetworkConnection = document.getElementById("forget-network-connection");
+    const wifiPasswordInput = document.getElementById("wifi-password-input");
+    const showPasswordToggle = document.getElementById("show-password-toggle");
 
     let savedNetworks = [];
 
@@ -146,6 +195,17 @@
 
             savedNetworkSsid.textContent = selectedNetwork.ssid;
             savedNetworkConnection.textContent = selectedNetwork.connection_name;
+
+            if (forgetNetworkConnection) {
+                forgetNetworkConnection.value = selectedNetwork.connection_name;
+            }
+        });
+    }
+</script>
+<script>
+    if (wifiPasswordInput && showPasswordToggle) {
+        showPasswordToggle.addEventListener("change", function () {
+            wifiPasswordInput.type = showPasswordToggle.checked ? "text" : "password";
         });
     }
 </script>
