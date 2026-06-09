@@ -4,6 +4,12 @@ from datetime import datetime
 from pathlib import Path
 
 
+# Central file and storage helper for the device.
+# Owns the data directory paths, JSON persistence, lockfiles,
+# media listing, cleanup, and session zipping.
+# It does not take photos or create timelapses directly; it provides
+# the filesystem support those processes rely on.
+
 class Storage:
     def __init__(self):
         # save directories into temp memory)

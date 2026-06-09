@@ -112,172 +112,38 @@ A simple travel timelapse device that:
 [x] tag release `v0.8`
 
 --------------------------------------------------
-## v0.9 – CONNECTIVITY MODES
-[x] define default connectivity behaviour on boot
-[ ] decide whether default should be hotspot-first, Wi-Fi-first, or fallback-based
-[ ] confirm there is always a reliable phone-access path when out and about
-[x] support hotspot mode so phone can connect directly to the Pi
-[ ] support known Wi-Fi mode for easier access and maintenance when networks exist
-[ ] define simple behaviour for updates / admin access when Wi-Fi is available
-[ ] keep connectivity logic outside Flask where possible
-[ ] confirm web UI is reachable in both hotspot and Wi-Fi modes
-[ ] commit working connectivity flow
-[ ] tag release `v0.9`
+## v0.9 – DEVICE ADMIN + CONNECTIVITY
+
+[x] add admin page
+[x] add device settings section
+[x] add network settings persistence
+[x] add hotspot/Wi-Fi mode selection
+[x] add current connectivity status display
+[x] add pending network mode reboot messaging
+[x] list saved Wi-Fi networks
+[x] forget saved Wi-Fi network from UI
+[x] add show-password toggle for Wi-Fi password entry
+[x] add network manager abstraction
+[x] keep connectivity management outside Flask routes
+[x] add camera settings persistence framework
+[x] add camera settings UI
+[x] persist camera settings in meta storage
+[x] add camera resolution autosave on change
+[x] add last image lightbox preview
+[x] add timelapse status polling / refresh details
+[x] add auto-refresh while timelapse is running
+[x] add estimated frame and video length preview before starting timelapse
+[x] add gallery previous / next image controls
+[x] add selectable video FPS for timelapse creation
+[x] add video runtime estimate before creating timelapse video
+[x] add selected MP4 preview and download link update
+[x] add session ZIP download support
+[x] improve storage abstractions for sessions and media
+[x] commit device admin and connectivity functionality
+[x] tag release 0.9
 
 --------------------------------------------------
 ## v0.10 – READY
-[ ] use it for a real timelapse (travel / window / outdoors)
-[ ] produce a usable video
-[ ] retrieve video via phone successfully
-[ ] confirm real-world access flow works without needing a laptop
-[ ] commit v0.10
-[ ] tag release `v0.10`
+[ ] add new Wi-Fi network from UI
+[ ] connect to saved Wi-Fi network from UI
 
---------------------------------------------------
-## v1 – PI VALIDATION
-[ ] confirm same flow works on Pi hardware
-[ ] confirm test photo works on Pi
-[ ] confirm timelapse works on Pi
-[ ] confirm video generation works on Pi
-[ ] confirm basic browser access from phone on Pi
-[ ] confirm reboot returns device to usable state
-[ ] run at least one real unattended timelapse on Pi
-[ ] retrieve usable video via phone successfully
-[ ] commit working Pi validation
-[ ] tag release `v1.0`
-
---------------------------------------------------
-## v1.1 – V1 MVP POLISH
-[ ] add a simple "timelapse state" / "last run" line to the UI
-[ ] timelapse settings don't need to show when one running
-[ ] show whether the last run completed or was terminated
-[ ] keep session details lightweight; do not build full session management yet
-[ ] make sure controls behave sensibly while a timelapse is running
-[ ] hide or disable create-video controls while a timelapse is running
-[ ] make gallery / video selection states sensible when no media exists
-[ ] show basic success / failure feedback after video creation
-[ ] decide whether selected image download is needed now or can wait
-[ ] optionally download selected images / whole session later
-
-[ ] commit MVP polish
-[ ] tag release `v1.1s`
-
---------------------------------------------------
-## v1.2 – CAMERA SETTINGS
-[ ] move "Take test photo" button beneath the last image preview
-[ ] add camera settings card beneath the test photo button
-[ ] make camera settings card collapsible
-[ ] add preset dropdown with options:
-    - Default (standard daytime)
-    - Sunset
-    - Nightscape
-    - Astro
-    - Custom
-[ ] add placeholder controls for camera settings:
-    - resolution
-    - exposure mode
-    - shutter speed
-    - ISO / gain
-    - white balance
-    - focus mode
-[ ] add placeholder buttons:
-    - save camera settings
-    - revert to defaults
-[ ] keep settings controls non-functional initially
-[ ] persist selected camera settings in `data/meta/camera_settings.json`
-[ ] implement resolution setting first
-[ ] confirm test photos use selected resolution
-[ ] confirm timelapse captures use selected resolution
-[ ] commit camera settings placeholder flow
-[ ] tag release `v1.2`
-
---------------------------------------------------
-## V2 / LATER
-[ ] proper session details / session state model
-[ ] richer status / error handling
-
-[ ] add wifi on / off control in the UI
-[ ] add clearer visibility of current connectivity mode in the UI
-[ ] add smarter switching rules between hotspot and Wi-Fi if needed
-[ ] tidy archive once core structure is settled
-[ ] add richer camera preset behaviour for sunset / nightscape / astro
-[ ] decide whether video generation should use source image resolution, preview resolution, or explicit export settings
-[ ] add optional preview / full-quality video export modes
-[ ] add whole-session download / zip export for processing later on laptop
-
---------------------------------------------------
-## V4 / HARDWARE CONTROLS – LATER
-[ ] add status LED
-[ ] add safe shutdown / off button
-[ ] define button / LED behaviour clearly
-[ ] confirm safe shutdown reduces dirty close risk
-
---------------------------------------------------
-## CURRENT SHAPE / NOTES
-- Home page is for taking a test photo, starting a timelapse, stopping a timelapse, and checking simple current status.
-- Gallery should be its own page.
-- Create-video should be its own page.
-- Full session details can wait until V2.
-- This needs to behave like a small appliance, not just a Python app.
-- Boot, dirty shutdown recovery, and reliable restart are part of getting to v1.
-- A stale lockfile must never leave the device unusable after power loss.
-- Phone access must still work when there is no external Wi-Fi available.
-- Known Wi-Fi is useful for updates, admin, and easier access when networks exist.
-- Connectivity should be handled simply and robustly; clever switching can come later.
-
-- Hardware controls like LED and off button can come later, once software recovery is solid.
-- Camera settings should start as UI placeholders, then resolution should be implemented first.
-- Presets should be practical shooting modes, not technical profiles: Default (standard daytime), Sunset, Nightscape, Astro, and Custom.
-- Editing camera settings manually should eventually switch the preset to Custom.
-- Timelapse video generation should ideally detect source image resolution and create an appropriate preview output, unless an explicit export setting is chosen.
-- Full-quality processing can happen later via laptop / NAS / remote render; the Pi should prioritise reliable preview output.
-
---------------------------------------------------
-## TARGET FILE TREE
-lapsepi/
-├── archive/
-├── data/
-│   ├── images/
-│   ├── meta/
-│   │   └── last_image_taken.json
-│   ├── sessions/
-│   │   └── YYYY-MM-DD/
-│   │       └── HH-MM-SS/
-│   │           ├── img_*.jpg
-│   │           ├── terminated.json
-│   │           └── timelapse.mp4
-│   └── test_img/
-├── src/
-│   └── lapsepi/
-│       ├── __init__.py
-│       ├── __main__.py
-│       ├── capture/
-│       │   ├── camera.py
-│       │   └── timelapse.py
-│       ├── control/
-│       │   └── controller.py
-│       ├── process/
-│       │   ├── last_image.py
-│       │   ├── pid_manager.py
-│       │   └── storage.py
-│       ├── web/
-│       │   ├── app.py
-│       │   ├── templates/
-│       │   │   ├── index.html
-│       │   │   ├── gallery.html
-│       │   │   ├── create_video.html
-│       │   │   └── styleguide.html
-│       │   └── static/
-│       │       ├── imgs/
-│       │       │   └── no_image.png
-│       │       └── main.css
-│       ├── mocks/
-│       │   └── mock_file_maker.py
-│       └── utils/
-│           ├── clear_images.py
-│           └── environment_detector.py
-├── tests/
-├── .gitignore
-├── README.md
-├── requirements.txt
-└── LICENSE

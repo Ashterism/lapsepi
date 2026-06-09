@@ -10,6 +10,10 @@ from ..process.settings_man import SettingsManager
 from ..process.network_man import NetworkManager
 
 
+# Thin wrapper layer between the web app and the underlying modules.
+# Most functions delegate directly; camera lockfile setup is handled here.
+
+
 # runmode = detect_runmode()
 camera = Camera()
 storage = Storage()

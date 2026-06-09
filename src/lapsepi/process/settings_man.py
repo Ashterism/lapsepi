@@ -1,5 +1,8 @@
 from .storage import Storage
 
+# Stores camera configuration selected by the user as json.
+# This class does not control the camera directly; it only manages
+# available options, defaults and persistence of settings.
 
 class SettingsManager:
 
